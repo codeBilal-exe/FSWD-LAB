@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A simple, static, responsive calculator UI built with HTML and CSS only, styled after a vintage LED desk calculator.">
+
+  <title>Calculator UI</title>
+    <!--LED FONT-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="calculator-style.css">
+</head>
+<body>
+
+  <main class="desk">
+    <section id="calculator" class="calculator" aria-label="Calculator">
+
+      <p class="calculator__brand">Calculator</p>
+
+      <div class="calculator__screen">
+      
+        <p class="calculator__expression">1 + 1 </p>
+        <p class="calculator__result">11</p>
+      </div>
+
+      <div class="calculator__keypad">
+        
+        <!-- Row 1 -->
+        <button type="button" class="key key--function">AC</button>
+        <button type="button" class="key key--function">+/-</button>
+        <button type="button" class="key key--function">%</button>
+        <button type="button" class="key key--operator">&divide;</button>
+
+        <!-- Row 2 -->
+        <button type="button" class="key key--number">7</button>
+        <button type="button" class="key key--number">8</button>
+        <button type="button" class="key key--number">9</button>
+        <button type="button" class="key key--operator">&times;</button>
+
+        <!-- Row 3 -->
+        <button type="button" class="key key--number">4</button>
+        <button type="button" class="key key--number">5</button>
+        <button type="button" class="key key--number">6</button>
+        <button type="button" class="key key--operator">&minus;</button>
+
+        <!-- Row 4 -->
+        <button type="button" class="key key--number">1</button>
+        <button type="button" class="key key--number">2</button>
+        <button type="button" class="key key--number">3</button>
+        <button type="button" class="key key--operator">+</button>
+
+        <!-- Row 5 -->
+        <button type="button" class="key key--number key--zero">0</button>
+        <button type="button" class="key key--number">.</button>
+
+        <button type="button" class="key key--equals">TOTAL &nbsp;=</button>
+
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>
