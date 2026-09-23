@@ -1,101 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Facebook Home</title>
-    <link rel="stylesheet" href="facebook-home.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <div class="brand-search">
-        <div class="logo">f</div>
-        <div class="search-box">Search Facebook</div>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook</title>
+  <link rel="stylesheet" href="L2-facebook-home.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">facebook</div>
+
+    <div class="search">
+      <input type="text" placeholder="Search Facebook">
+    </div>
+
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Friends</a>
+      <a href="#">Watch</a>
+      <a href="#">Marketplace</a>
+      <a href="#">Groups</a>
+    </nav>
+
+    <div class="profile">
+      <div class="profile-pic">B</div>
+      <span>Muhammad Bilal</span>
+    </div>
+  </header>
+
+
+  <main>
+
+    <aside class="left-sidebar">
+
+      <div class="user">
+        <div class="big-pic">B</div>
+        <b>Muhammad Bilal</b>
       </div>
-      <nav class="nav-icons">
-        <span class="active">Home</span>
-        <span>Watch</span>
-        <span>Market</span>
-        <span>Groups</span>
-      </nav>
-      <div class="profile-actions">
-        <span class="avatar-mini">A</span>
-        <span>Menu</span>
+
+      <a href="#">👥 Friends</a>
+      <a href="#">🕘 Memories</a>
+      <a href="#">📌 Saved</a>
+      <a href="#">👥 Groups</a>
+      <a href="#">🛒 Marketplace</a>
+      <a href="#">▶ Watch</a>
+      <a href="#">📅 Events</a>
+
+    </aside>
+
+
+    <section class="feed">
+
+      <div class="stories">
+
+        <div class="story create-story">
+          <div class="story-image">+</div>
+          <p>Create Story</p>
+        </div>
+
+        <div class="story">
+          <div class="story-image one">U</div>
+          <p>Usaidullah Rehan</p>
+        </div>
+
+        <div class="story">
+          <div class="story-image two">U</div>
+          <p>Usman Khan</p>
+        </div>
+
+        <div class="story">
+          <div class="story-image three">H</div>
+          <p>Hafiz Obaidullah</p>
+        </div>
+
+        <div class="story">
+          <div class="story-image four">M</div>
+          <p>Muhammad Bilal</p>
+        </div>
+
       </div>
-    </header>
 
-    <main class="facebook-layout">
-      <aside class="left-sidebar">
-        <div class="profile-card">
-          <div class="avatar large">A</div>
-          <h3>Ali Hassan</h3>
-        </div>
-        <ul>
-          <li>Friends</li>
-          <li>Saved</li>
-          <li>Groups</li>
-          <li>Marketplace</li>
-          <li>Watch</li>
-        </ul>
-      </aside>
 
-      <section class="feed">
-        <div class="story-bar">
-          <div class="story story-one"><span>Your Story</span></div>
-          <div class="story story-two"><span>Sarah</span></div>
-          <div class="story story-three"><span>Usman</span></div>
-          <div class="story story-four"><span>Hina</span></div>
+      <div class="create-post">
+
+        <div class="post-top">
+          <div class="profile-pic">B</div>
+          <input type="text" placeholder="What's on your mind, Muhammad Bilal?">
         </div>
 
-        <div class="composer">
-          <div class="composer-top">
-            <div class="avatar small">A</div>
-            <div class="post-input">What's on your mind?</div>
-          </div>
-          <div class="composer-actions">
-            <span>Live</span>
-            <span>Photo</span>
-            <span>Feeling</span>
-          </div>
+        <div class="post-options">
+          <button>📹 Live Video</button>
+          <button>🖼 Photo/Video</button>
+          <button>😊 Feeling/Activity</button>
         </div>
 
-        <article class="post">
-          <div class="post-header">
-            <div class="avatar small">S</div>
-            <div>
-              <h4>Sarah Ahmed</h4>
-              <p>2 hours ago</p>
-            </div>
-          </div>
-          <p class="post-text">Beautiful sunset with friends. Nothing beats a happy evening.</p>
-          <div class="post-image image-one"></div>
-          <div class="post-stats"><span>Like · 1.2k</span><span>Comments · 240</span></div>
-        </article>
+      </div>
 
-        <article class="post">
-          <div class="post-header">
-            <div class="avatar small">U</div>
-            <div>
-              <h4>Usman Khan</h4>
-              <p>Yesterday</p>
-            </div>
-          </div>
-          <p class="post-text">Working hard, aiming high, and enjoying every bit of the journey.</p>
-          <div class="post-image image-two"></div>
-          <div class="post-stats"><span>Like · 890</span><span>Comments · 154</span></div>
-        </article>
-      </section>
 
-      <aside class="right-sidebar">
+      <div class="post">
+
+        <div class="post-header">
+
+          <div class="profile-pic">U</div>
+
+          <div>
+            <b>Usaidullah Rehan</b>
+            <p>2 hrs · 🌎</p>
+          </div>
+
+          <span class="dots">•••</span>
+
+        </div>
+
+        <p class="post-text">
+          Had a great day today! Working on some new projects.
+        </p>
+
+        <div class="post-image">
+          <span>Post Image</span>
+        </div>
+
+        <div class="post-stats">
+          <span>👍 ❤️ 125</span>
+          <span>24 Comments · 8 Shares</span>
+        </div>
+
+        <div class="post-buttons">
+          <button>👍 Like</button>
+          <button>💬 Comment</button>
+          <button>↗ Share</button>
+        </div>
+
+      </div>
+
+
+      <div class="post">
+
+        <div class="post-header">
+
+          <div class="profile-pic">U</div>
+
+          <div>
+            <b>Usman Khan</b>
+            <p>5 hrs · 🌎</p>
+          </div>
+
+          <span class="dots">•••</span>
+
+        </div>
+
+        <p class="post-text">
+          Beautiful weather today! ☀️
+        </p>
+
+        <div class="post-image second-image">
+          <span>Photo</span>
+        </div>
+
+        <div class="post-stats">
+          <span>👍 ❤️ 87</span>
+          <span>12 Comments</span>
+        </div>
+
+        <div class="post-buttons">
+          <button>👍 Like</button>
+          <button>💬 Comment</button>
+          <button>↗ Share</button>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <aside class="right-sidebar">
+
+      <h3>Sponsored</h3>
+
+      <div class="sponsored">
+        <div class="ad-image">AD</div>
+        <div>
+          <b>Learn Web Development</b>
+          <p>example.com</p>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="contacts-header">
         <h3>Contacts</h3>
-        <ul>
-          <li><span class="online-dot"></span> Sarah Ahmed</li>
-          <li><span class="online-dot"></span> Usman Khan</li>
-          <li><span class="online-dot"></span> Hina Ali</li>
-          <li><span class="online-dot"></span> Ahmed Raza</li>
-          <li><span class="online-dot"></span> Zain Malik</li>
-        </ul>
-      </aside>
-    </main>
-  </body>
+        <span>•••</span>
+      </div>
+
+      <div class="contact">
+        <div class="online">U</div>
+        <b>Usaidullah Rehan</b>
+      </div>
+
+      <div class="contact">
+        <div class="online">U</div>
+        <b>Usman Khan</b>
+      </div>
+
+      <div class="contact">
+        <div class="online">H</div>
+        <b>Hafiz Obaidullah</b>
+      </div>
+
+      <div class="contact">
+        <div class="online">B</div>
+        <b>Muhammad Bilal</b>
+      </div>
+
+    </aside>
+
+  </main>
+
+</body>
+
 </html>
