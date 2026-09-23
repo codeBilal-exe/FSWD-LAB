@@ -3,9 +3,11 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/jpeg" href="../../favicon.jfif">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Muhammad Bilal — Network &amp; Security Analyst</title>
+  <link rel="icon" type="image/jpeg" href="../../favicon.jfif">
+  <meta name="description"
+    content="Muhammad Bilal is a Computer Science student in Islamabad moving into network security and application development — Flutter apps, Python security tooling, and TCP-layer defense projects.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -20,7 +22,11 @@
 
   <header class="nav">
     <a href="#top" class="nav__mark">MB<span>_</span></a>
-    <nav class="nav__links">
+
+    <!-- CSS-only mobile menu: checkbox + label, no JavaScript -->
+    <input type="checkbox" id="navCheck" class="nav__check">
+
+    <nav class="nav__links" id="navLinks">
       <a href="#about">about</a>
       <a href="#skills">skills</a>
       <a href="#work">experience</a>
@@ -28,6 +34,13 @@
       <a href="#contact">contact</a>
     </nav>
     <a class="nav__cta" href="#contact">get in touch</a>
+    <label class="nav__toggle" for="navCheck" aria-label="Toggle menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </label>
   </header>
 
   <main>
@@ -144,7 +157,7 @@
         <div class="skill-card">
           <h3>Working Style</h3>
           <ul class="tag-list">
-            <li>Vibe Coding</li>
+            <li>Rapid Prototyping</li>
             <li>Project Management</li>
             <li>Collaboration</li>
             <li>AI Tooling</li>
