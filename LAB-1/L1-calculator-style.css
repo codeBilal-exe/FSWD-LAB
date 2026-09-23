@@ -1,18 +1,18 @@
 :root {
-  /* Desk surface behind the calculator */
+  
   --color-desk: #cdbfa5;
 
-  /* Calculator plastic housing */
+  
   --color-housing: #eee3cd;
   --color-housing-edge: #b9a582; 
   --color-brand-text: #8a765a;
 
-  /* Screen */
+  
   --color-screen-bg: #23241f;   
   --color-led: #ff5a2a;          
   --color-led-dim: #a3623a;      
 
-  /* Keys */
+  
   --color-key-number: #faf6ec;   
   --color-key-number-text: #3a3428;
   --color-key-function: #7d7360; 
@@ -43,8 +43,8 @@ body {
   justify-content: center;
   align-items: center;
 
-  min-height: 100vh;   /* full viewport height */
-  width: 100vw;        /* full viewport width */
+  min-height: 100vh;   
+  width: 100vw;        
   padding: 4vh 4vw;
   background: radial-gradient(circle at 50% 30%, #d9cdb2 0%, var(--color-desk) 70%);
 }
@@ -126,38 +126,38 @@ body {
   
 }
 
-/* Number keys (0-9, decimal point) */
+
 .key--number {
   background-color: var(--color-key-number);
   color: var(--color-key-number-text);
 }
 
-/* Function keys: AC, +/-, % */
+
 .key--function {
   background-color: var(--color-key-function);
   color: var(--color-key-function-text);
   font-size: clamp(0.8rem, 3.2vw, 0.95rem);
 }
 
-/* Operator keys: ÷ × − + */
+
 .key--operator {
   background-color: var(--color-key-operator);
   color: var(--color-key-operator-text);
 }
 
-/* Zero key */
+
 .key--zero {
   grid-column: span 2;
   justify-content: flex-start;
   padding-left: 1.4rem;
 }
 
-/* Decimal point key*/
+
 .key--decimal {
   grid-column: span 2;
 }
 
-/* TOTAL bar: */
+
 .key--equals {
   grid-column: 1 / -1; 
   height: clamp(2.6rem, 9vw, 3rem); 
@@ -168,7 +168,7 @@ body {
   font-size: clamp(0.9rem, 3.6vw, 1.05rem);
 }
 
-@media (max-width: 22.5em) { /* 22.5em = 360px at 16px base */
+@media (max-width: 22.5em) { 
   .calculator {
     padding: 1.1rem 0.9rem 1rem;
   }

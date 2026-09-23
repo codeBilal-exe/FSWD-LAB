@@ -1,0 +1,144 @@
+body {
+  margin: 0;
+  background: #ddd;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.paper {
+  width: 8.5in;
+  height: 11in;
+  background: white;
+  margin: 20px auto;
+  padding: 0.65in;
+  box-sizing: border-box;
+  position: relative;
+}
+
+h1 {
+  text-align: center;
+  font-size: 17pt;
+  font-weight: normal;
+  margin: 0;
+}
+
+h1 span {
+  font-size: 13pt;
+}
+
+.note {
+  text-align: center;
+  font-size: 6pt;
+  font-style: italic;
+  margin: 5px 0 14px;
+}
+
+.authors {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  text-align: center;
+  font-size: 7pt;
+  margin-bottom: 25px;
+}
+
+.author {
+  line-height: 1;
+}
+
+.author p {
+  margin: 1px 0;
+}
+
+.second-row {
+  margin-top: 15px;
+}
+
+.second-row:nth-child(5) {
+  grid-column: 2;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.left-column,
+.right-column {
+  font-size: 8.5pt;
+  line-height: 1.08;
+  text-align: justify;
+}
+
+p {
+  margin: 0 0 8px;
+}
+
+.abstract {
+  margin-bottom: 10px;
+}
+
+.keywords {
+  margin-bottom: 13px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 8.5pt;
+  font-weight: normal;
+  margin: 12px 0 6px;
+}
+
+h2 span {
+  font-size: 7pt;
+  font-style: italic;
+}
+
+h3 {
+  font-size: 8.5pt;
+  font-weight: normal;
+  font-style: italic;
+  margin: 10px 0 4px;
+}
+
+ul {
+  margin: 4px 0;
+  padding-left: 18px;
+}
+
+li {
+  margin-bottom: 4px;
+}
+
+.funding {
+  border-top: 1px solid #555;
+  font-size: 6.5pt;
+  padding-top: 4px;
+  margin-top: 15px;
+  text-align: left;
+}
+
+.footer {
+  position: absolute;
+  bottom: 10px;
+  left: 0.65in;
+  font-size: 6.5pt;
+  color: #555;
+}
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .paper {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .paper {
+    transform: scale(0.9);
+    transform-origin: top center;
+    margin-bottom: -100px;
+  }
+}

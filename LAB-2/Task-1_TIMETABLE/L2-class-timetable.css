@@ -1,0 +1,156 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: #ffffff;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  color: #111;
+}
+
+.timetable-container {
+  width: 100%;
+  max-width: 1250px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+
+  font-size: 42px;
+  font-weight: 500;
+
+  margin: 0 0 8px 0;
+}
+
+.university {
+  font-size: 14px;
+  margin-left: 2px;
+  margin-bottom: 4px;
+}
+
+.timetable {
+  width: 100%;
+
+  border-collapse: collapse;
+  table-layout: fixed;
+
+  border: 2px solid #222;
+
+  font-size: 13px;
+}
+
+.timetable th:first-child,
+.timetable td:first-child {
+  width: 10%;
+}
+
+.timetable th:not(:first-child),
+.timetable td:not(:first-child) {
+  width: 10%;
+}
+
+.timetable thead th {
+  height: 78px;
+
+  border: 1px solid #222;
+
+  text-align: center;
+  vertical-align: middle;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  padding: 5px;
+}
+
+.timetable thead th span {
+  display: block;
+
+  margin-top: 8px;
+
+  font-size: 10px;
+}
+
+.timetable tbody td {
+  height: 140px;
+
+  border: 1px solid #222;
+
+  text-align: center;
+  vertical-align: middle;
+
+  padding: 5px;
+}
+
+.timetable .day {
+  font-size: 48px;
+  font-weight: 400;
+
+  width: 10%;
+
+  padding: 0;
+}
+
+.teacher {
+  font-size: 10px;
+  line-height: 1.15;
+
+  min-height: 25px;
+
+  margin-bottom: 12px;
+}
+
+.subject {
+  font-size: 14px;
+
+  font-weight: bold;
+
+  line-height: 1.15;
+
+  margin: 5px 0;
+}
+
+.subject.large {
+  font-size: 15px;
+}
+
+.room {
+  font-size: 13px;
+
+  margin-top: 12px;
+
+  line-height: 1.2;
+}
+
+.footer {
+  display: flex;
+
+  justify-content: space-between;
+
+  font-size: 11px;
+
+  margin-top: 3px;
+}
+
+@media (max-width: 900px) {
+  body {
+    padding: 10px;
+  }
+
+  .timetable-container {
+    overflow-x: auto;
+  }
+
+  .timetable {
+    min-width: 1100px;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+}
