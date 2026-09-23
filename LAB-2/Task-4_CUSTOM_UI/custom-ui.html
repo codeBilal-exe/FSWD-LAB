@@ -1,79 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Custom UI</title>
-    <link rel="stylesheet" href="custom-ui.css" />
-  </head>
-  <body>
-    <div class="ui-page">
-      <div class="shape shape-one"></div>
-      <div class="shape shape-two"></div>
 
-      <aside class="sidebar">
-        <div class="brand">NOVA</div>
-        <nav>
-          <a class="active">Dashboard</a>
-          <a>Analytics</a>
-          <a>Team</a>
-          <a>Reports</a>
-          <a>Settings</a>
-        </nav>
-      </aside>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f2e9">
+  <link rel="icon" type="image/jpeg" href="../../favicon.jfif">
+  <title>Classroom Next — Your semester, in view</title>
+  <link rel="stylesheet" href="custom-ui.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0"
+    rel="stylesheet">
+</head>
 
-      <main class="dashboard">
-        <header class="dashboard-header">
-          <div>
-            <p class="eyebrow">Overview</p>
-            <h1>Performance Dashboard</h1>
-          </div>
-          <button>Export</button>
-        </header>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="logo" href="#home" aria-label="Classroom Next home">
+        <span class="logo-mark"><span class="material-symbols-outlined">menu_book</span></span>
+        <span class="logo-name">classroom<span>next</span></span>
+      </a>
 
-        <section class="cards">
-          <div class="card accent">
-            <p>Total Revenue</p>
-            <h2>$84.2K</h2>
-            <span>+12.8% this month</span>
-          </div>
-          <div class="card">
-            <p>Active Users</p>
-            <h2>24.6K</h2>
-            <span>+5.4% this week</span>
-          </div>
-          <div class="card">
-            <p>Conversion</p>
-            <h2>7.8%</h2>
-            <span>+1.2% increase</span>
-          </div>
-        </section>
+      <div class="nav-caption">WORKSPACE</div>
+      <nav class="nav-links">
+        <a class="nav-item active" href="#home" aria-current="page"><span
+            class="material-symbols-outlined">grid_view</span><span>Overview</span><span class="active-dot"></span></a>
+        <a class="nav-item" href="#planner"><span
+            class="material-symbols-outlined">calendar_month</span><span>Schedule</span></a>
+        <a class="nav-item" href="#tasks"><span
+            class="material-symbols-outlined">checklist</span><span>Assignments</span><span
+            class="nav-count">2</span></a>
+        <a class="nav-item" href="#classes"><span class="material-symbols-outlined">folder_open</span><span>Course
+            files</span></a>
+        <a class="nav-item" href="#planner"><span class="material-symbols-outlined">event_note</span><span>Study
+            planner</span></a>
+        <a class="nav-item" href="#snapshot"><span class="material-symbols-outlined">insights</span><span>My
+            progress</span></a>
+      </nav>
 
-        <section class="main-grid">
-          <div class="panel chart-panel">
-            <h3>Traffic</h3>
-            <div class="bars">
-              <span style="height: 40%"></span>
-              <span style="height: 55%"></span>
-              <span style="height: 68%"></span>
-              <span style="height: 50%"></span>
-              <span style="height: 80%"></span>
-              <span style="height: 90%"></span>
-              <span style="height: 75%"></span>
-              <span style="height: 100%"></span>
+      <div class="sidebar-bottom">
+        <div class="semester-card">
+          <span class="semester-label">CURRENT TERM</span>
+          <strong>Fall semester</strong>
+          <span class="semester-dates">September — December 2026</span>
+          <div class="term-progress"><span></span></div>
+          <div class="term-foot"><span>Week 04</span><span>10 weeks left</span></div>
+        </div>
+        <a class="nav-item settings-link" href="#settings"><span
+            class="material-symbols-outlined">settings</span><span>Settings</span></a>
+        <div class="profile-card">
+          <div class="avatar" aria-hidden="true">S</div>
+          <div class="profile-copy"><strong>Student Name</strong><span>Computer Science</span></div>
+          <span class="material-symbols-outlined profile-more">more_horiz</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content" id="home">
+      <header class="top-nav">
+        <div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><strong>Overview</strong></div>
+        <div class="top-actions">
+          <label class="search-bar"><span class="material-symbols-outlined">search</span><input type="search"
+              placeholder="Search your workspace" aria-label="Search your workspace"><kbd>⌘ K</kbd></label>
+          <button class="icon-button notification-button" aria-label="Notifications"><span
+              class="material-symbols-outlined">notifications</span><i></i></button>
+          <div class="today-date"><span class="date-dot"></span>WED, SEP 23</div>
+        </div>
+      </header>
+
+      <section class="page-intro">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-rule"></span>WEDNESDAY, SEPTEMBER 23</p>
+          <h1>A good day to <em>make progress.</em></h1>
+          <p class="intro-copy">Your semester at a glance. Pick up where you left off.</p>
+        </div>
+        <a class="text-link" href="#classes">Explore your classes <span
+            class="material-symbols-outlined">arrow_forward</span></a>
+      </section>
+
+      <section class="focus-panel" id="tasks" aria-labelledby="focus-title">
+        <div class="focus-main">
+          <div class="focus-kicker"><span class="material-symbols-outlined">today</span>YOUR FOCUS TODAY</div>
+          <div class="focus-headline"><span class="focus-number">02</span>
+            <div>
+              <h2 id="focus-title">Things to hand in</h2>
+              <p>A little progress goes a long way.</p>
             </div>
           </div>
-
-          <div class="panel task-panel">
-            <h3>Tasks</h3>
-            <ul>
-              <li><span class="check"></span> Design sprint review</li>
-              <li><span class="check"></span> User onboarding flow</li>
-              <li><span class="check"></span> Marketing campaign</li>
-            </ul>
+          <a class="focus-link" href="#classes">See your assignments <span
+              class="material-symbols-outlined">arrow_forward</span></a>
+        </div>
+        <div class="focus-side" aria-label="This week's progress">
+          <div class="week-heading"><span>THIS WEEK</span><span>SEP 21 — 27</span></div>
+          <div class="week-days" aria-label="Weekday progress">
+            <div><span>M</span><i class="day-mark done"></i></div>
+            <div><span>T</span><i class="day-mark done"></i></div>
+            <div><span>W</span><i class="day-mark current"></i></div>
+            <div><span>T</span><i class="day-mark"></i></div>
+            <div><span>F</span><i class="day-mark"></i></div>
+            <div><span>S</span><i class="day-mark muted"></i></div>
+            <div><span>S</span><i class="day-mark muted"></i></div>
           </div>
-        </section>
-      </main>
-    </div>
-  </body>
+          <p class="week-note"><span class="material-symbols-outlined">auto_awesome</span>You’re building a steady
+            rhythm.</p>
+        </div>
+      </section>
+
+      <div class="section-heading" id="classes">
+        <div>
+          <p class="eyebrow">YOUR LEARNING SPACE</p>
+          <h2>Classes <span class="class-total">06</span></h2>
+        </div><a class="view-all" href="#planner">View study plan <span
+            class="material-symbols-outlined">arrow_forward</span></a>
+      </div>
+
+      <section class="class-grid" aria-label="Your classes">
+        <article class="class-card class-web">
+          <div class="class-top">
+            <div class="course-symbol"><span class="material-symbols-outlined">code</span></div><span
+              class="course-code">CS — 301</span><button class="card-menu" aria-label="Web Engineering options"><span
+                class="material-symbols-outlined">more_horiz</span></button>
+          </div>
+          <div class="card-title">
+            <h3>Web<br>Engineering</h3>
+            <p>Section A <span>·</span> Dr. Smith</p>
+          </div>
+          <div class="class-progress">
+            <div class="progress-label"><span>Course progress</span><strong>75%</strong></div>
+            <div class="progress-track"><span style="width:75%"></span></div>
+          </div>
+          <div class="card-bottom"><span class="due-indicator urgent"><i></i>Due today</span><span
+              class="due-detail">Lab 2 · 11:59 PM</span><a href="#tasks" class="arrow-link"
+              aria-label="View Web Engineering assignments"><span
+                class="material-symbols-outlined">arrow_outward</span></a></div>
+        </article>
+
+        <article class="class-card class-visual">
+          <div class="class-top">
+            <div class="course-symbol"><span class="material-symbols-outlined">draw</span></div><span
+              class="course-code">CS — 302</span><button class="card-menu" aria-label="Visual Programming options"><span
+                class="material-symbols-outlined">more_horiz</span></button>
+          </div>
+          <div class="card-title">
+            <h3>Visual<br>Programming</h3>
+            <p>Section B <span>·</span> Mr. Allen</p>
+          </div>
+          <div class="class-progress">
+            <div class="progress-label"><span>Course progress</span><strong>40%</strong></div>
+            <div class="progress-track"><span style="width:40%"></span></div>
+          </div>
+          <div class="card-bottom"><span class="due-indicator clear"><i></i>All caught up</span><span
+              class="due-detail">Nothing due soon</span><a href="#tasks" class="arrow-link"
+              aria-label="View Visual Programming assignments"><span
+                class="material-symbols-outlined">arrow_outward</span></a></div>
+        </article>
+
+        <article class="class-card class-networks">
+          <div class="class-top">
+            <div class="course-symbol"><span class="material-symbols-outlined">hub</span></div><span
+              class="course-code">CS — 303</span><button class="card-menu" aria-label="Computer Networks options"><span
+                class="material-symbols-outlined">more_horiz</span></button>
+          </div>
+          <div class="card-title">
+            <h3>Computer<br>Networks</h3>
+            <p>Section A <span>·</span> Dr. Khan</p>
+          </div>
+          <div class="class-progress">
+            <div class="progress-label"><span>Course progress</span><strong>90%</strong></div>
+            <div class="progress-track"><span style="width:90%"></span></div>
+          </div>
+          <div class="card-bottom"><span class="due-indicator upcoming"><i></i>Coming up</span><span
+              class="due-detail">Quiz 4 · Friday</span><a href="#tasks" class="arrow-link"
+              aria-label="View Computer Networks assignments"><span
+                class="material-symbols-outlined">arrow_outward</span></a></div>
+        </article>
+
+        <article class="class-card class-fullstack">
+          <div class="class-top">
+            <div class="course-symbol"><span class="material-symbols-outlined">layers</span></div><span
+              class="course-code">CS — 304</span><button class="card-menu"
+              aria-label="Full Stack Web Development options"><span
+                class="material-symbols-outlined">more_horiz</span></button>
+          </div>
+          <div class="card-title">
+            <h3>Full Stack<br>Web Development</h3>
+            <p>Section A <span>·</span> Prof. Ahmed</p>
+          </div>
+          <div class="class-progress">
+            <div class="progress-label"><span>Course progress</span><strong>58%</strong></div>
+            <div class="progress-track"><span style="width:58%"></span></div>
+          </div>
+          <div class="card-bottom"><span class="due-indicator upcoming"><i></i>Coming up</span><span
+              class="due-detail">API project · Thursday</span><a href="#tasks" class="arrow-link"
+              aria-label="View Full Stack Web Development assignments"><span
+                class="material-symbols-outlined">arrow_outward</span></a></div>
+        </article>
+
+        <article class="class-card class-os">
+          <div class="class-top">
+            <div class="course-symbol"><span class="material-symbols-outlined">memory</span></div><span
+              class="course-code">CS — 305</span><button class="card-menu" aria-label="Operating Systems options"><span
+                class="material-symbols-outlined">more_horiz</span></button>
+          </div>
+          <div class="card-title">
+            <h3>Operating<br>Systems</h3>
+            <p>Section B <span>·</span> Dr. Farooq</p>
+          </div>
+          <div class="class-progress">
+            <div class="progress-label"><span>Course progress</span><strong>32%</strong></div>
+            <div class="progress-track"><span style="width:32%"></span></div>
+          </div>
+          <div class="card-bottom"><span class="due-indicator clear"><i></i>On track</span><span
+              class="due-detail">Lecture notes updated</span><a href="#tasks" class="arrow-link"
+              aria-label="View Operating Systems assignments"><span
+                class="material-symbols-outlined">arrow_outward</span></a></div>
+        </article>
+
+        <article class="class-card class-database">
+          <div class="class-top">
+            <div class="course-symbol"><span class="material-symbols-outlined">database</span></div><span
+              class="course-code">CS — 306</span><button class="card-menu" aria-label="Database Systems options"><span
+                class="material-symbols-outlined">more_horiz</span></button>
+          </div>
+          <div class="card-title">
+            <h3>Database<br>Systems</h3>
+            <p>Section A <span>·</span> Ms. Hassan</p>
+          </div>
+          <div class="class-progress">
+            <div class="progress-label"><span>Course progress</span><strong>67%</strong></div>
+            <div class="progress-track"><span style="width:67%"></span></div>
+          </div>
+          <div class="card-bottom"><span class="due-indicator urgent"><i></i>Due tomorrow</span><span
+              class="due-detail">ERD worksheet · 9 AM</span><a href="#tasks" class="arrow-link"
+              aria-label="View Database Systems assignments"><span
+                class="material-symbols-outlined">arrow_outward</span></a></div>
+        </article>
+      </section>
+
+      <section class="workspace-grid" id="planner" aria-label="Study planner and upcoming work">
+        <article class="workspace-panel schedule-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">YOUR DAY, AT A GLANCE</p>
+              <h2>Today’s schedule</h2>
+            </div><a class="panel-action" href="#planner" aria-label="Open full schedule"><span
+                class="material-symbols-outlined">arrow_outward</span></a>
+          </div>
+          <div class="schedule-list">
+            <div class="schedule-row"><span class="schedule-time">09:00<span>AM</span></span><i
+                class="schedule-line"></i>
+              <div class="schedule-course"><strong>Operating Systems</strong><span>Lecture · Room B12</span></div><span
+                class="schedule-room">B12</span>
+            </div>
+            <div class="schedule-row now"><span class="schedule-time">11:00<span>AM</span></span><i
+                class="schedule-line"></i>
+              <div class="schedule-course"><strong>Full Stack Web Dev</strong><span>Lab session · Computing Lab 3</span>
+              </div><span class="schedule-room">LAB 3</span>
+            </div>
+            <div class="schedule-row"><span class="schedule-time">02:00<span>PM</span></span><i
+                class="schedule-line"></i>
+              <div class="schedule-course"><strong>Database Systems</strong><span>Tutorial · Room C04</span></div><span
+                class="schedule-room">C04</span>
+            </div>
+          </div>
+          <a class="panel-footer-link" href="#classes">See weekly timetable <span
+              class="material-symbols-outlined">arrow_forward</span></a>
+        </article>
+
+        <article class="workspace-panel tasks-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">KEEP THE MOMENTUM</p>
+              <h2>Coming up <span class="task-total">03</span></h2>
+            </div><a class="panel-action" href="#tasks" aria-label="Open all assignments"><span
+                class="material-symbols-outlined">arrow_outward</span></a>
+          </div>
+          <div class="task-list">
+            <label class="task-row"><input type="checkbox"><span class="task-check"></span><span
+                class="task-copy"><strong>Web Engineering lab</strong><small>Web Engineering · Today, 11:59
+                  PM</small></span><span class="task-priority due-now">TODAY</span></label>
+            <label class="task-row"><input type="checkbox"><span class="task-check"></span><span
+                class="task-copy"><strong>ERD worksheet</strong><small>Database Systems · Tomorrow, 9
+                  AM</small></span><span class="task-priority due-soon">SOON</span></label>
+            <label class="task-row"><input type="checkbox"><span class="task-check"></span><span
+                class="task-copy"><strong>API project milestone</strong><small>Full Stack Web Dev ·
+                  Thursday</small></span><span class="task-priority">THU</span></label>
+          </div>
+          <a class="panel-footer-link" href="#tasks">Open assignment list <span
+              class="material-symbols-outlined">arrow_forward</span></a>
+        </article>
+      </section>
+
+      <section class="snapshot-panel" id="snapshot" aria-label="Semester progress">
+        <div class="snapshot-copy"><span class="snapshot-icon material-symbols-outlined">auto_graph</span>
+          <div>
+            <p class="eyebrow">A LOOK AT YOUR SEMESTER</p>
+            <h2>Steady work adds up.</h2>
+          </div>
+        </div>
+        <div class="snapshot-stat"><strong>6</strong><span>active courses</span></div>
+        <div class="snapshot-stat"><strong>60<span>%</span></strong><span>average progress</span></div>
+        <div class="snapshot-stat"><strong>4<span>/5</span></strong><span>study days this week</span></div>
+        <a class="snapshot-link" href="#classes" aria-label="View course progress"><span
+            class="material-symbols-outlined">arrow_forward</span></a>
+      </section>
+
+      <footer class="page-footer"><span>Small steps, strong semesters.</span><span>CLASSROOM NEXT <i>·</i> FALL
+          2026</span></footer>
+    </main>
+  </div>
+</body>
+
 </html>
