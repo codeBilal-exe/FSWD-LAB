@@ -5,208 +5,581 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Classroom Next | Lab 3</title>
+    <meta name="theme-color" content="#f8fafc">
+    <link rel="icon" type="image/png" href="../../../favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../shared.css" rel="stylesheet">
+    <style>
+        :root {
+            --page-bg: #f3f6fb;
+            --panel: #ffffff;
+            --panel-alt: #f7f9fd;
+            --muted: #6b7280;
+            --text: #0f172a;
+            --soft-border: rgba(15, 23, 42, 0.08);
+            --primary: #2563eb;
+            --primary-soft: #dfeaff;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #06b6d4;
+            --shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        body {
+            background: linear-gradient(180deg, #f8fafc 0%, #eef4ff 100%);
+            color: var(--text);
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .page-shell {
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.86);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--soft-border);
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-weight: 800;
+            font-size: 1.2rem;
+            text-decoration: none;
+            color: var(--text);
+            letter-spacing: -0.05em;
+        }
+
+        .brand-mark {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.8rem;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: var(--primary);
+            box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.1);
+            font-size: 1.4rem;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 1.2rem;
+            line-height: 1;
+            vertical-align: middle;
+        }
+
+        .brand span:last-child {
+            color: var(--primary);
+        }
+
+        .workspace-label {
+            letter-spacing: 0.14em;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .side-nav .nav-link {
+            border-radius: 0.9rem;
+            padding: 0.75rem 0.9rem;
+            color: var(--text);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .side-nav .nav-link.active {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            color: var(--primary);
+            box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+        }
+
+        .count-pill {
+            background: rgba(239, 68, 68, 0.16);
+            color: #b91c1c;
+            padding: 0.2rem 0.52rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            margin-left: auto;
+            font-weight: 700;
+        }
+
+        .term-card {
+            background: linear-gradient(135deg, #e0f2fe, #dbeafe);
+            border-radius: 1.1rem;
+            border: 0;
+        }
+
+        .term-card .small {
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .progress {
+            height: 0.5rem;
+            border-radius: 999px;
+            background: rgba(37, 99, 235, 0.08);
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary), #60a5fa);
+            border-radius: 999px;
+        }
+
+        .profile-box {
+            background: #f8fafc;
+            border: 1px solid var(--soft-border);
+            border-radius: 1rem;
+        }
+
+        .avatar {
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c7d2fe, #93c5fd);
+            color: #1e3a8a;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+        }
+
+        .content-panel {
+            background: transparent;
+        }
+
+        .header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .date-label {
+            color: var(--muted);
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            font-weight: 700;
+        }
+
+        .bell-btn {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.9rem;
+            border: 1px solid var(--soft-border);
+            background: rgba(255, 255, 255, 0.8);
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .bell-btn::after {
+            content: "2";
+            position: absolute;
+            top: -0.2rem;
+            right: -0.2rem;
+            width: 1.2rem;
+            height: 1.2rem;
+            border-radius: 50%;
+            background: #ef4444;
+            color: white;
+            font-size: 0.65rem;
+            display: grid;
+            place-items: center;
+        }
+
+        .hero-panel {
+            background: linear-gradient(135deg, #1d4ed8 0%, #0f172a 100%);
+            border-radius: 1.6rem;
+            color: white;
+            box-shadow: 0 24px 48px rgba(37, 99, 235, 0.2);
+        }
+
+        .hero-panel .badge {
+            letter-spacing: 0.12em;
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+
+        .hero-panel h2 {
+            letter-spacing: -0.05em;
+            font-weight: 800;
+        }
+
+        .card-surface {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--soft-border);
+            border-radius: 1.2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .section-kicker {
+            letter-spacing: 0.12em;
+            font-size: 0.7rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .assignment-box {
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            border-radius: 1rem;
+            background: #fff;
+            padding: 1rem;
+        }
+
+        .badge-soft-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #b91c1c;
+        }
+
+        .badge-soft-warning {
+            background: rgba(245, 158, 11, 0.12);
+            color: #b45309;
+        }
+
+        .class-card {
+            border: 1px solid var(--soft-border);
+            border-radius: 1.1rem;
+            background: #fff;
+            box-shadow: var(--shadow);
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .course-badge {
+            border-radius: 999px;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+            padding: 0.45rem 0.7rem;
+        }
+
+        .course-badge.primary {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .course-badge.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .course-badge.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .course-badge.info {
+            background: #cffafe;
+            color: #0f766e;
+        }
+
+        .course-badge.danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .course-badge.secondary {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .class-card h3 {
+            letter-spacing: -0.04em;
+        }
+
+        .list-group-item {
+            border: 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            padding-left: 0;
+            padding-right: 0;
+            background: transparent;
+            font-weight: 600;
+        }
+
+        .list-group-item:last-child {
+            border-bottom: 0;
+        }
+
+        .snapshot-value {
+            font-size: clamp(2rem, 3vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.06em;
+        }
+
+        .muted-text {
+            color: var(--muted);
+        }
+
+        @media (max-width: 991.98px) {
+            .sidebar {
+                border-right: 0;
+                border-bottom: 1px solid var(--soft-border);
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="container-fluid page-shell">
         <div class="row min-vh-100">
-            <aside class="col-lg-2 d-none d-lg-flex flex-column bg-white border-end p-3"><a
-                    class="navbar-brand fw-bold text-dark mb-4" href="#home">📚 classroom<span
-                        class="text-primary">next</span></a><small class="text-secondary fw-bold mb-2">WORKSPACE</small>
-                <nav class="nav nav-pills flex-column gap-1"><a class="nav-link active" href="#home">▦ Overview</a><a
-                        class="nav-link text-dark" href="#planner">▣ Schedule</a><a class="nav-link text-dark"
-                        href="#tasks">☑ Assignments <span class="badge text-bg-danger">2</span></a><a
-                        class="nav-link text-dark" href="#classes">▤ Course files</a><a class="nav-link text-dark"
-                        href="#planner">▧ Study planner</a><a class="nav-link text-dark" href="#snapshot">◷ My
-                        progress</a></nav>
+            <aside class="sidebar col-lg-3 col-xl-2 d-flex flex-column p-3 p-xl-4">
+                <a class="brand mb-4" href="#home" aria-label="Classroom Next home">
+                    <span class="brand-mark"><span class="material-symbols-outlined">menu_book</span></span>
+                    <span>classroom<span>next</span></span>
+                </a>
+
+                <div class="workspace-label mb-3">WORKSPACE</div>
+
+                <nav class="side-nav nav nav-pills flex-column gap-1 mb-4">
+                    <a class="nav-link active" href="#home"><span
+                            class="material-symbols-outlined">grid_view</span><span>Overview</span></a>
+                    <a class="nav-link text-dark" href="#planner"><span
+                            class="material-symbols-outlined">calendar_month</span><span>Schedule</span></a>
+                    <a class="nav-link text-dark" href="#tasks"><span
+                            class="material-symbols-outlined">checklist</span><span>Assignments</span><span
+                            class="count-pill">2</span></a>
+                    <a class="nav-link text-dark" href="#classes"><span
+                            class="material-symbols-outlined">folder_open</span><span>Course files</span></a>
+                    <a class="nav-link text-dark" href="#planner"><span
+                            class="material-symbols-outlined">event_note</span><span>Study planner</span></a>
+                    <a class="nav-link text-dark" href="#snapshot"><span
+                            class="material-symbols-outlined">insights</span><span>My progress</span></a>
+                </nav>
+
                 <div class="mt-auto">
-                    <div class="card bg-primary-subtle border-0 mb-3">
-                        <div class="card-body"><small class="text-primary fw-bold">CURRENT TERM</small>
-                            <h3 class="h6 mt-2">Fall semester</h3><small>September — December 2026</small>
-                            <div class="progress mt-3" role="progressbar" aria-label="Term progress" aria-valuenow="30"
-                                aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar" style="width:30%"></div>
-                            </div><small class="text-secondary">Week 04 · 10 weeks left</small>
+                    <div class="term-card card border-0 p-3 mb-3">
+                        <div class="small mb-2">CURRENT TERM</div>
+                        <h3 class="h6 mb-1">Fall semester</h3>
+                        <div class="small text-secondary">September — December 2026</div>
+                        <div class="progress mt-3" aria-label="Term progress">
+                            <div class="progress-bar" style="width: 30%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between small text-secondary mt-2">
+                            <span>Week 04</span>
+                            <span>10 weeks left</span>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center gap-2"><span class="avatar">S</span>
-                        <div><strong class="small">Student Name</strong>
+
+                    <div class="profile-box d-flex align-items-center gap-2 p-2">
+                        <span class="avatar">S</span>
+                        <div>
+                            <div class="fw-bold small">Student Name</div>
                             <div class="small text-secondary">Computer Science</div>
                         </div>
                     </div>
                 </div>
             </aside>
-            <main class="col-lg-10 px-3 px-md-4 px-xl-5 py-4" id="home">
-                <header class="d-flex justify-content-between align-items-center mb-4">
-                    <div><small class="text-secondary">MONDAY, SEPTEMBER 28, 2026</small>
+
+            <main class="col-lg-9 col-xl-10 px-3 px-md-4 px-xl-5 py-4 content-panel" id="home">
+                <header class="header-bar mb-4">
+                    <div>
+                        <div class="date-label">MONDAY, SEPTEMBER 28, 2026</div>
                         <h1 class="h3 fw-bold mb-0">Good morning, Student</h1>
-                    </div><button class="btn btn-light position-relative" aria-label="Notifications">♧<span
-                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-danger">2</span></button>
+                    </div>
+                    <button class="bell-btn" aria-label="Notifications"><span
+                            class="material-symbols-outlined">notifications</span></button>
                 </header>
-                <section class="dashboard-accent rounded-4 text-white p-4 p-lg-5 mb-4">
-                    <div class="row align-items-center">
-                        <div class="col-lg-8"><span class="badge text-bg-light text-success mb-2">YOUR WEEK AT A
-                                GLANCE</span>
-                            <h2 class="display-6 fw-bold">A good day to make progress.</h2>
+
+                <section class="hero-panel p-4 p-lg-5 mb-4">
+                    <div class="row align-items-center g-3">
+                        <div class="col-lg-8">
+                            <div class="badge rounded-pill bg-white text-success mb-3">YOUR WEEK AT A GLANCE</div>
+                            <h2 class="display-6 mb-3">A good day to make progress.</h2>
                             <p class="mb-0 text-white-50">You have two assignments due soon. A little focus today goes a
                                 long way.</p>
                         </div>
-                        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0"><a href="#tasks" class="btn btn-light">View
-                                assignments →</a></div>
-                    </div>
-                </section>
-                <section id="tasks" class="card border-0 shadow-sm mb-4">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div><small class="text-primary fw-bold">NEEDS YOUR ATTENTION</small>
-                                <h2 class="h4 fw-bold mb-3">Things to hand in</h2>
-                            </div><a class="link-primary" href="#planner">All tasks</a>
-                        </div>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="border rounded-3 p-3 d-flex justify-content-between gap-3">
-                                    <div><span class="badge text-bg-danger">Due tomorrow</span>
-                                        <h3 class="h6 mt-2 mb-1">Responsive Bootstrap page</h3><small
-                                            class="text-secondary">Web Engineering · Lab 3</small>
-                                    </div><button class="btn btn-outline-primary btn-sm align-self-center">Open</button>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="border rounded-3 p-3 d-flex justify-content-between gap-3">
-                                    <div><span class="badge text-bg-warning">Due Friday</span>
-                                        <h3 class="h6 mt-2 mb-1">Subnetting worksheet</h3><small
-                                            class="text-secondary">Computer Networks · Assignment 2</small>
-                                    </div><button class="btn btn-outline-primary btn-sm align-self-center">Open</button>
-                                </div>
-                            </div>
+                        <div class="col-lg-4 text-lg-end">
+                            <a href="#tasks" class="btn btn-light fw-bold rounded-pill">View assignments →</a>
                         </div>
                     </div>
                 </section>
+
+                <section id="tasks" class="card-surface p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <div class="section-kicker">NEEDS YOUR ATTENTION</div>
+                            <h2 class="h4 fw-bold mb-0">Things to hand in</h2>
+                        </div>
+                        <a href="#planner" class="link-primary text-decoration-none fw-semibold">All tasks</a>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="assignment-box d-flex justify-content-between gap-3 align-items-center">
+                                <div>
+                                    <span class="badge badge-soft-danger rounded-pill">Due tomorrow</span>
+                                    <h3 class="h6 mt-2 mb-1">Responsive Bootstrap page</h3>
+                                    <small class="muted-text">Web Engineering · Lab 3</small>
+                                </div>
+                                <button class="btn btn-outline-primary btn-sm rounded-pill">Open</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="assignment-box d-flex justify-content-between gap-3 align-items-center">
+                                <div>
+                                    <span class="badge badge-soft-warning rounded-pill">Due Friday</span>
+                                    <h3 class="h6 mt-2 mb-1">Subnetting worksheet</h3>
+                                    <small class="muted-text">Computer Networks · Assignment 2</small>
+                                </div>
+                                <button class="btn btn-outline-primary btn-sm rounded-pill">Open</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <section id="classes" class="mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div><small class="text-primary fw-bold">YOUR SEMESTER</small>
-                            <h2 class="h4 fw-bold mb-0">Classes <span class="badge text-bg-light">06</span></h2>
-                        </div><a class="link-primary" href="#planner">View schedule</a>
+                        <div>
+                            <div class="section-kicker">YOUR SEMESTER</div>
+                            <h2 class="h4 fw-bold mb-0">Classes <span
+                                    class="badge rounded-pill bg-light text-dark">06</span></h2>
+                        </div>
+                        <a href="#planner" class="link-primary text-decoration-none fw-semibold">View schedule</a>
                     </div>
+
                     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
                         <div class="col">
-                            <article class="card h-100 border-0 shadow-sm">
-                                <div class="card-body"><span class="badge text-bg-primary">CS — 301</span>
-                                    <h3 class="h5 mt-3">Web Engineering</h3>
-                                    <p class="small text-secondary">Dr. Ahmed · Next: Tuesday, 10:00 AM</p>
-                                    <div class="progress" aria-label="Course progress">
-                                        <div class="progress-bar bg-primary" style="width:65%"></div>
-                                    </div><small class="text-secondary">65% complete</small>
+                            <article class="class-card p-3">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="course-badge primary">CS — 301</span>
                                 </div>
+                                <h3 class="h5 mb-2">Web Engineering</h3>
+                                <p class="small text-secondary mb-3">Dr. Ahmed · Next: Tuesday, 10:00 AM</p>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar" style="width: 65%"></div>
+                                </div>
+                                <small class="text-secondary">65% complete</small>
                             </article>
                         </div>
                         <div class="col">
-                            <article class="card h-100 border-0 shadow-sm">
-                                <div class="card-body"><span class="badge text-bg-success">CS — 302</span>
-                                    <h3 class="h5 mt-3">Visual Programming</h3>
-                                    <p class="small text-secondary">Ms. Noor · Next: Wednesday, 11:30 AM</p>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-success" style="width:48%"></div>
-                                    </div><small class="text-secondary">48% complete</small>
+                            <article class="class-card p-3">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="course-badge success">CS — 302</span>
                                 </div>
+                                <h3 class="h5 mb-2">Visual Programming</h3>
+                                <p class="small text-secondary mb-3">Ms. Noor · Next: Wednesday, 11:30 AM</p>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-success" style="width: 48%"></div>
+                                </div>
+                                <small class="text-secondary">48% complete</small>
                             </article>
                         </div>
                         <div class="col">
-                            <article class="card h-100 border-0 shadow-sm">
-                                <div class="card-body"><span class="badge text-bg-warning">CS — 303</span>
-                                    <h3 class="h5 mt-3">Computer Networks</h3>
-                                    <p class="small text-secondary">Ms. Sana · Next: Monday, 10:00 AM</p>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-warning" style="width:72%"></div>
-                                    </div><small class="text-secondary">72% complete</small>
+                            <article class="class-card p-3">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="course-badge warning">CS — 303</span>
                                 </div>
+                                <h3 class="h5 mb-2">Computer Networks</h3>
+                                <p class="small text-secondary mb-3">Ms. Sana · Next: Monday, 10:00 AM</p>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-warning" style="width: 72%"></div>
+                                </div>
+                                <small class="text-secondary">72% complete</small>
                             </article>
                         </div>
                         <div class="col">
-                            <article class="card h-100 border-0 shadow-sm">
-                                <div class="card-body"><span class="badge text-bg-info">CS — 304</span>
-                                    <h3 class="h5 mt-3">Full Stack Web Development</h3>
-                                    <p class="small text-secondary">Mr. Bilal · Next: Monday, 1:40 PM</p>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-info" style="width:54%"></div>
-                                    </div><small class="text-secondary">54% complete</small>
+                            <article class="class-card p-3">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="course-badge info">CS — 304</span>
                                 </div>
+                                <h3 class="h5 mb-2">Full Stack Web Development</h3>
+                                <p class="small text-secondary mb-3">Mr. Bilal · Next: Monday, 1:40 PM</p>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-info" style="width: 54%"></div>
+                                </div>
+                                <small class="text-secondary">54% complete</small>
                             </article>
                         </div>
                         <div class="col">
-                            <article class="card h-100 border-0 shadow-sm">
-                                <div class="card-body"><span class="badge text-bg-danger">CS — 305</span>
-                                    <h3 class="h5 mt-3">Operating Systems</h3>
-                                    <p class="small text-secondary">Dr. Khan · Next: Tuesday, 8:30 AM</p>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-danger" style="width:38%"></div>
-                                    </div><small class="text-secondary">38% complete</small>
+                            <article class="class-card p-3">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="course-badge danger">CS — 305</span>
                                 </div>
+                                <h3 class="h5 mb-2">Operating Systems</h3>
+                                <p class="small text-secondary mb-3">Dr. Khan · Next: Tuesday, 8:30 AM</p>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-danger" style="width: 38%"></div>
+                                </div>
+                                <small class="text-secondary">38% complete</small>
                             </article>
                         </div>
                         <div class="col">
-                            <article class="card h-100 border-0 shadow-sm">
-                                <div class="card-body"><span class="badge text-bg-secondary">CS — 306</span>
-                                    <h3 class="h5 mt-3">Database Systems</h3>
-                                    <p class="small text-secondary">Mr. Raza · Next: Monday, 11:30 AM</p>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-secondary" style="width:61%"></div>
-                                    </div><small class="text-secondary">61% complete</small>
+                            <article class="class-card p-3">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="course-badge secondary">CS — 306</span>
                                 </div>
+                                <h3 class="h5 mb-2">Database Systems</h3>
+                                <p class="small text-secondary mb-3">Mr. Raza · Next: Monday, 11:30 AM</p>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-secondary" style="width: 61%"></div>
+                                </div>
+                                <small class="text-secondary">61% complete</small>
                             </article>
                         </div>
                     </div>
                 </section>
+
                 <section id="planner" class="row g-3 mb-4">
                     <div class="col-lg-6">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body"><small class="text-primary fw-bold">MONDAY · SEPT 28</small>
-                                <h2 class="h5 fw-bold mt-1">Today’s schedule</h2>
-                                <div class="list-group list-group-flush">
-                                    <div class="list-group-item px-0"><strong>08:30</strong> · Operating Systems <small
-                                            class="text-secondary">B-11</small></div>
-                                    <div class="list-group-item px-0"><strong>10:00</strong> · Computer Networks <small
-                                            class="text-secondary">B-12</small></div>
-                                    <div class="list-group-item px-0"><strong>13:40</strong> · Full Stack Lab <small
-                                            class="text-secondary">Lab 1</small></div>
-                                </div>
+                        <div class="card-surface p-4 h-100">
+                            <div class="section-kicker">MONDAY · SEPT 28</div>
+                            <h2 class="h5 fw-bold mt-1">Today’s schedule</h2>
+                            <div class="list-group list-group-flush mt-3">
+                                <div class="list-group-item"><strong>08:30</strong> · Operating Systems <small
+                                        class="muted-text">B-11</small></div>
+                                <div class="list-group-item"><strong>10:00</strong> · Computer Networks <small
+                                        class="muted-text">B-12</small></div>
+                                <div class="list-group-item"><strong>13:40</strong> · Full Stack Lab <small
+                                        class="muted-text">Lab 1</small></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body"><small class="text-primary fw-bold">COMING UP</small>
-                                <h2 class="h5 fw-bold mt-1">Upcoming work <span class="badge text-bg-light">03</span>
-                                </h2>
-                                <div class="list-group list-group-flush">
-                                    <div class="list-group-item px-0 d-flex justify-content-between">Bootstrap landing
-                                        page <span class="badge text-bg-danger">Tomorrow</span></div>
-                                    <div class="list-group-item px-0 d-flex justify-content-between">Subnetting
-                                        worksheet <span class="badge text-bg-warning">Friday</span></div>
-                                    <div class="list-group-item px-0 d-flex justify-content-between">Database lab report
-                                        <span class="badge text-bg-light">Oct 05</span></div>
+                        <div class="card-surface p-4 h-100">
+                            <div class="section-kicker">COMING UP</div>
+                            <h2 class="h5 fw-bold mt-1">Upcoming work <span
+                                    class="badge rounded-pill bg-light text-dark">03</span></h2>
+                            <div class="list-group list-group-flush mt-3">
+                                <div class="list-group-item d-flex justify-content-between align-items-center">Bootstrap
+                                    landing page <span class="badge badge-soft-danger rounded-pill">Tomorrow</span>
                                 </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    Subnetting worksheet <span
+                                        class="badge badge-soft-warning rounded-pill">Friday</span></div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">Database
+                                    lab report <span class="badge bg-light text-dark rounded-pill">Oct 05</span></div>
                             </div>
                         </div>
                     </div>
                 </section>
-                <section id="snapshot" class="card border-0 shadow-sm">
-                    <div class="card-body p-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
-                        <div><small class="text-primary fw-bold">SEMESTER SNAPSHOT</small>
-                            <h2 class="h4 fw-bold mb-1">Steady work adds up.</h2><span class="text-secondary">You’re
-                                building a strong semester. Keep your streak going.</span>
+
+                <section id="snapshot" class="card-surface p-4 mb-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                        <div>
+                            <div class="section-kicker">SEMESTER SNAPSHOT</div>
+                            <h2 class="h4 fw-bold mb-1">Steady work adds up.</h2>
+                            <span class="muted-text">You’re building a strong semester. Keep your streak going.</span>
                         </div>
-                        <div class="text-center"><span class="display-5 fw-bold text-success">78%</span>
-                            <div class="small text-secondary">Average attendance</div>
+                        <div class="text-center">
+                            <div class="snapshot-value text-success">78%</div>
+                            <div class="small muted-text">Average attendance</div>
                         </div>
-                        <div class="text-center"><span class="display-5 fw-bold text-primary">12</span>
-                            <div class="small text-secondary">Tasks completed</div>
+                        <div class="text-center">
+                            <div class="snapshot-value text-primary">12</div>
+                            <div class="small muted-text">Tasks completed</div>
                         </div>
                     </div>
                 </section>
-                <footer class="text-secondary small mt-4">Small steps, strong semesters. · CLASSROOM NEXT · FALL 2026
+
+                <footer class="text-secondary small mt-4 text-center text-lg-start">
+                    Small steps, strong semesters. · CLASSROOM NEXT · FALL 2026
                 </footer>
             </main>
         </div>

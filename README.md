@@ -1,49 +1,51 @@
-# ⚡ Full Stack Web Development (FSWD) Lab Portal
+# FSWD Lab Portal
 
-> A dynamic, interactive lab environment and live inspection portal for web development tasks, powered by GitHub Pages and the GitHub REST API.
+The project contains the Full Stack Web Development lab exercises and a live preview portal.
 
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live%20Demo-10b981?style=for-the-badge&logo=github)](https://codeBilal-exe.github.io/FSWD-LAB/)
-[![Stack](https://img.shields.io/badge/Stack-HTML5%20|%20CSS3%20|%20JS-d4af37?style=for-the-badge)](https://developer.mozilla.org/)
+- **Live portal:** [codeBilal-exe.github.io/FSWD-LAB](https://codeBilal-exe.github.io/FSWD-LAB/)
+- **Main preview file:** [`index.html`](index.html)
+- **UI framework:** Bootstrap 5, with small custom styles where needed
 
----
+## Browse the labs
 
-## ✨ Key Features
+The portal has three levels:
 
-- **Automated Lab Discovery:** Scans the repository tree via GitHub API to detect new lab modules and task files automatically—no manual list maintenance required.
-- **Interactive Multi-Device Stage:** Preview any task across simulated **Desktop**, **Tablet**, and **Mobile** viewports in real time.
-- **Built-in Source Inspector:** Read syntax-highlighted HTML, CSS, and JS files directly in the browser with line numbers and single-click copy functionality.
-- **Modern Editorial UI:** Classy dark/light theme with ambient glassmorphism and champagne brass design elements.
+1. The home page shows one card for each lab.
+2. Selecting a lab shows one card for each task.
+3. Selecting a task opens its live preview and source inspector.
 
----
+The portal groups HTML files by task folder. When a task folder contains `index.html`, that page is used for the preview card. Other HTML, CSS, and JavaScript files in the same folder are available in the source inspector, so a multi-page task still has a single preview card.
 
-## 📁 Repository Structure & Naming Conventions
+## Add a new task
 
-The portal uses GitHub's Git Trees API to discover files. To ensure your work displays properly, follow these conventions:
+Create a folder named `Task-<number>_<NAME>` inside a folder named `LAB-<number>`. Put the task pages and assets together in the task folder:
 
 ```text
-FSWD-LAB/
-├── index.html                    # Main Portal Portal UI
-├── favicon.jfif                  # Portal Icon
-│
-├── LAB-1/                        # Lab Module Folder (Prefix: LAB-*)
-│   ├── L1-calculator.html        # Individual Task File
-│   ├── L1-calculator-style.css   # Task Stylesheet
-│   └── calculato-fun.js          # Task Script
-│
-└── LAB-2/                        # Multi-Task Folder Structure
-    ├── Task-1_TIMETABLE/         # Subfolder per Task
-    │   ├── index.html            # Primary Task View
-    │   └── style.css
-    └── Task-2_FACEBOOK/
-        ├── L2-facebook-home.html
-        └── L2-facebook-home.css
+LAB-3/
+  Task-2_ECOMMERCE_UI/
+    index.html       # One preview card, opens this page
+    shop.html        # Available in the source inspector
+    product.html
+    signup.html
+    login.html
+    reviews.html
+    cart.html
+    checkout.html
+    store.css
+```
 
-## Portal Navigation
+No preview card markup needs to be added manually. Push new files to the configured GitHub branch and the portal will discover them the next time it loads.
 
-The portal uses a three-step flow:
+For a task stored directly in a lab folder, each HTML file is treated as its own task. A task subfolder with several HTML files is treated as one task; the portal uses `index.html` when available, otherwise it picks the first HTML page it finds.
 
-1. The home page shows lab cards only.
-2. Selecting a lab opens its task cards.
-3. Selecting a task opens the live preview and source inspector.
+## Portal configuration
 
-The preview's **Directory** button returns to the task list for the lab you opened. New HTML pages discovered in a `LAB-*` folder automatically become task cards; no card markup needs to be added by hand.
+The root `index.html` currently reads the public `codeBilal-exe/FSWD-LAB` repository's `main` branch using the GitHub repository tree API. If the repository or branch changes, update the `REPO` and `BRANCH` constants near the bottom of `index.html`.
+
+Automatic discovery requires a web server and the files to be present on the configured GitHub branch. Browsers cannot list arbitrary folders from a local `file://` page.
+
+## Lab folders
+
+- [Lab 1](LAB-1/)
+- [Lab 2](LAB-2/)
+- [Lab 3](LAB-3/)
