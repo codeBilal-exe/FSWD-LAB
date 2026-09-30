@@ -1,156 +1,125 @@
 * {
   box-sizing: border-box;
 }
-
 body {
   margin: 0;
-  padding: 20px;
-  background: #ffffff;
-
+  padding: 8px 10px;
   font-family: Arial, Helvetica, sans-serif;
-
-  color: #111;
+  color: #000;
+  background: #fff;
 }
-
-.timetable-container {
-  width: 100%;
-  max-width: 1250px;
-  margin: auto;
+.sheet {
+  max-width: 990px;
+  margin: 0 auto;
 }
-
+.org {
+  font-size: 11px;
+  height: 14px;
+}
 h1 {
+  margin: 0 0 8px;
   text-align: center;
-
+  font-weight: 400;
   font-size: 42px;
-  font-weight: 500;
-
-  margin: 0 0 8px 0;
+  line-height: 1.1;
 }
 
-.university {
-  font-size: 14px;
-  margin-left: 2px;
-  margin-bottom: 4px;
-}
-
-.timetable {
+table {
   width: 100%;
-
   border-collapse: collapse;
   table-layout: fixed;
-
-  border: 2px solid #222;
-
-  font-size: 13px;
+  border: 2px solid #000;
+}
+th,
+td {
+  border: 1px solid #000;
+  padding: 0;
+  vertical-align: top;
+}
+col.day {
+  width: 105px;
 }
 
-.timetable th:first-child,
-.timetable td:first-child {
-  width: 10%;
-}
-
-.timetable th:not(:first-child),
-.timetable td:not(:first-child) {
-  width: 10%;
-}
-
-.timetable thead th {
-  height: 78px;
-
-  border: 1px solid #222;
-
-  text-align: center;
-  vertical-align: middle;
-
-  font-size: 12px;
-  font-weight: 500;
-
-  padding: 5px;
-}
-
-.timetable thead th span {
-  display: block;
-
-  margin-top: 8px;
-
-  font-size: 10px;
-}
-
-.timetable tbody td {
-  height: 140px;
-
-  border: 1px solid #222;
-
-  text-align: center;
-  vertical-align: middle;
-
-  padding: 5px;
-}
-
-.timetable .day {
-  font-size: 48px;
+thead th {
+  position: relative;
+  height: 66px;
   font-weight: 400;
+}
+thead .n {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  right: 0;
+  font-size: 11px;
+  white-space: nowrap;
+}
+thead .s {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 15px;
+  padding-top: 3px;
+  font-size: 8px;
+  border-top: 1px solid #000;
+}
 
-  width: 10%;
+tbody th {
+  font-size: 40px;
+  font-weight: 400;
+  vertical-align: middle;
+  text-align: center;
+}
+tbody tr {
+  height: 117px;
+}
 
+.c {
+  height: 117px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  padding: 3px 1px 2px;
+}
+.t {
+  font-size: 8px;
+  line-height: 1.25;
+}
+.c b {
+  font-size: 12px;
+  line-height: 1.2;
+  padding: 0 4px;
+}
+.r {
+  font-size: 13px;
+  letter-spacing: -0.2px;
+  line-height: 1.15;
+}
+
+/* long (lab) cells */
+.lab .c {
+  align-items: stretch;
+  padding: 5px 12px 3px;
+}
+.lab .t {
+  font-size: 14px;
+  text-align: left;
+}
+.lab .c b {
+  font-weight: 400;
+  font-size: 15px;
   padding: 0;
 }
-
-.teacher {
-  font-size: 10px;
-  line-height: 1.15;
-
-  min-height: 25px;
-
-  margin-bottom: 12px;
-}
-
-.subject {
+.lab .r {
   font-size: 14px;
-
-  font-weight: bold;
-
-  line-height: 1.15;
-
-  margin: 5px 0;
+  letter-spacing: 0;
 }
 
-.subject.large {
-  font-size: 15px;
-}
-
-.room {
-  font-size: 13px;
-
-  margin-top: 12px;
-
-  line-height: 1.2;
-}
-
-.footer {
+footer {
   display: flex;
-
   justify-content: space-between;
-
   font-size: 11px;
-
-  margin-top: 3px;
-}
-
-@media (max-width: 900px) {
-  body {
-    padding: 10px;
-  }
-
-  .timetable-container {
-    overflow-x: auto;
-  }
-
-  .timetable {
-    min-width: 1100px;
-  }
-
-  h1 {
-    font-size: 32px;
-  }
+  padding-top: 3px;
 }

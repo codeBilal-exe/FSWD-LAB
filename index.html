@@ -1,0 +1,949 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FSWD Lab Portal</title>
+    <link rel="icon" type="image/jpeg" href="favicon.jfif">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <style>
+        :root {
+            /* Classy Obsidian, Champagne Brass & Charcoal Theme */
+            --bg: #090a0d;
+            --panel: #11131a;
+            --card: #151821;
+            --line: rgba(212, 175, 55, 0.14);
+            --line-strong: rgba(212, 175, 55, 0.35);
+            --text: #eceae5;
+            --mute: #8d92a3;
+            --gold: #d4af37;
+            --gold-glow: rgba(212, 175, 55, 0.08);
+            --shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.8);
+        }
+
+        :root[data-theme=light] {
+            --bg: #f4f3ef;
+            --panel: #ffffff;
+            --card: #fcfbf9;
+            --line: rgba(160, 120, 20, 0.16);
+            --line-strong: rgba(160, 120, 20, 0.4);
+            --text: #16171b;
+            --mute: #626775;
+            --gold: #9e7a1d;
+            --gold-glow: rgba(158, 122, 29, 0.05);
+            --shadow: 0 20px 50px -15px rgba(22, 23, 27, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font: 15px/1.6 "Outfit", system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            letter-spacing: 0.01em;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font: inherit;
+            color: var(--text);
+            background: transparent;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        button:hover {
+            border-color: var(--gold);
+            background: var(--gold-glow);
+            color: var(--gold);
+        }
+
+        button.on {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: #090a0d;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.25);
+        }
+
+        .mono {
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        /* Subtle Ambient Lighting */
+        .ambient {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(1200px 600px at 50% -10%, var(--gold-glow), transparent 70%),
+                radial-gradient(900px 500px at 90% 90%, rgba(20, 23, 33, 0.9), transparent);
+        }
+
+        /* ==========================================================================
+   REDESIGNED FLOATING NAVBAR
+   ========================================================================== */
+        .top-wrapper {
+            position: fixed;
+            top: 18px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+            pointer-events: none;
+        }
+
+        .top {
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            padding: 10px 20px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            background: color-mix(in srgb, var(--panel) 80%, transparent);
+            border: 1px solid var(--line);
+            border-radius: 99px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+            transition: border-color 0.3s ease;
+        }
+
+        .top:hover {
+            border-color: var(--line-strong);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: "Cinzel Decorative", serif;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.08em;
+            color: var(--text);
+        }
+
+        .logo img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--gold);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gold);
+            padding: 4px 10px;
+            background: var(--gold-glow);
+            border: 1px solid var(--line);
+            border-radius: 99px;
+        }
+
+        .status-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 8px var(--gold);
+        }
+
+        .sp {
+            flex: 1;
+        }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--mute);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 6px 14px;
+            border-radius: 99px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--gold);
+            background: var(--gold-glow);
+        }
+
+        #theme {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            padding: 0;
+            justify-content: center;
+            border-color: var(--line);
+        }
+
+        /* ==========================================================================
+   REDESIGNED HERO SECTION
+   ========================================================================== */
+        #home {
+            position: relative;
+            z-index: 1;
+            padding: 120px clamp(20px, 5vw, 64px) 100px;
+            max-width: 1360px;
+            margin: auto;
+        }
+
+        .hero {
+            padding: 48px 0 32px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border: 1px solid var(--line);
+            border-radius: 99px;
+            color: var(--gold);
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            background: color-mix(in srgb, var(--card) 60%, transparent);
+        }
+
+        .hero h1 {
+            font-family: "Cinzel Decorative", serif;
+            font-size: clamp(36px, 5.5vw, 68px);
+            line-height: 1.15;
+            margin: 0 0 24px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            max-width: 900px;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+            font-weight: 400;
+        }
+
+        .hero p {
+            color: var(--mute);
+            max-width: 620px;
+            margin: 0 0 48px;
+            font-size: 18px;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        /* Stat Cards */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 780px;
+        }
+
+        .stat-box {
+            background: var(--card);
+            border: 1px solid var(--line);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-3px);
+            border-color: var(--line-strong);
+        }
+
+        .stat-box b {
+            display: block;
+            font-family: "Cinzel Decorative", serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 4px;
+        }
+
+        .stat-box span {
+            color: var(--mute);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        /* Group Headers */
+        .grp {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 72px 0 32px;
+        }
+
+        .grp h2 {
+            margin: 0;
+            font-family: "Cinzel Decorative", serif;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .grp span {
+            color: var(--mute);
+            font-size: 13px;
+            font-weight: 300;
+        }
+
+        .grp i {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--line), transparent);
+        }
+
+        /* ==========================================================================
+   REDESIGNED CARDS SECTION
+   ========================================================================== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+            gap: 32px;
+        }
+
+        .empty-state {
+            max-width: 720px;
+            margin: 32px auto;
+            padding: 32px;
+            color: var(--mute);
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .empty-state h2 { color: var(--text); font-size: 20px; }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--line-strong);
+            box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.9);
+        }
+
+        /* Card Mockup Window Header */
+        .window-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 14px;
+            background: color-mix(in srgb, var(--panel) 90%, transparent);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .dot-btn {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+
+        .dot-btn.r {
+            background: #ef4444;
+        }
+
+        .dot-btn.y {
+            background: #f59e0b;
+        }
+
+        .dot-btn.g {
+            background: #10b981;
+        }
+
+        .window-title {
+            margin-left: auto;
+            font-size: 10px;
+            color: var(--mute);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .thumb {
+            position: relative;
+            aspect-ratio: 16/10;
+            overflow: hidden;
+            background: #fff;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .thumb iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1280px;
+            height: 800px;
+            border: 0;
+            transform-origin: 0 0;
+            pointer-events: none;
+        }
+
+        .thumb::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 40%, rgba(9, 10, 13, 0.7));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover .thumb::after {
+            opacity: 1;
+        }
+
+        .body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .body h3 {
+            margin: 0;
+            font-family: "Cinzel Decorative", serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        .body p {
+            margin: 0;
+            color: var(--mute);
+            font-size: 14px;
+            flex: 1;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--line);
+        }
+
+        .chip {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--line);
+            color: var(--mute);
+            background: var(--panel);
+        }
+
+        .chip.html {
+            color: #e44d26;
+            border-color: rgba(228, 77, 38, 0.2);
+        }
+
+        .chip.css {
+            color: #264de4;
+            border-color: rgba(38, 77, 228, 0.2);
+        }
+
+        .chip.js {
+            color: #f7df1e;
+            border-color: rgba(247, 223, 30, 0.2);
+        }
+
+        .go {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--gold);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .go::after {
+            content: "→";
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover .go::after {
+            transform: translateX(4px);
+        }
+
+        /* Detail View Section */
+        #view {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            z-index: 100;
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+        }
+
+        .bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px;
+            padding: 14px clamp(20px, 5vw, 64px);
+            background: var(--panel);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .bar h2 {
+            margin: 0 10px 0 0;
+            font-family: "Cinzel Decorative", serif;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .seg {
+            display: flex;
+            background: var(--bg);
+            padding: 3px;
+            border-radius: 6px;
+            border: 1px solid var(--line);
+        }
+
+        .seg button {
+            border: 0;
+            border-radius: 4px;
+            padding: 6px 14px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .seg button:hover {
+            background: transparent;
+            color: var(--gold);
+        }
+
+        .seg button.on {
+            background: var(--card);
+            color: var(--gold);
+            border: 1px solid var(--line);
+            box-shadow: none;
+        }
+
+        .stage {
+            flex: 1;
+            min-height: 0;
+            position: relative;
+            overflow: auto;
+            background: repeating-conic-gradient(var(--line) 0 25%, transparent 0 50%) 0 0/20px 20px;
+        }
+
+        .frame {
+            display: block;
+            margin: 0 auto;
+            height: 100%;
+            width: 100%;
+            border: 0;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .frame.tablet {
+            width: 768px;
+            max-width: 100%;
+            box-shadow: 0 0 0 1px var(--line), 0 30px 80px rgba(0, 0, 0, 0.8);
+        }
+
+        .frame.mobile {
+            width: 390px;
+            max-width: 100%;
+            box-shadow: 0 0 0 1px var(--line), 0 30px 80px rgba(0, 0, 0, 0.8);
+        }
+
+        .code {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            background: #0c0d10;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 12px 20px 0;
+            background: #13151b;
+            overflow-x: auto;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .tabs button {
+            border: 0;
+            border-radius: 4px 4px 0 0;
+            color: #767c8d;
+            font: 12px "JetBrains Mono", monospace;
+            white-space: nowrap;
+            padding: 8px 16px;
+            background: transparent;
+        }
+
+        .tabs button.act {
+            background: #0c0d10;
+            color: var(--gold);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-bottom: 1px solid #0c0d10;
+        }
+
+        .tools {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 24px;
+            font-size: 12px;
+            color: #767c8d;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            background: #0c0d10;
+        }
+
+        .tools button {
+            padding: 4px 12px;
+            font-size: 11px;
+            color: #d0d4e0;
+            border-color: rgba(212, 175, 55, 0.2);
+        }
+
+        .tools button:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .tools a {
+            color: var(--gold);
+        }
+
+        pre {
+            margin: 0;
+            flex: 1;
+            overflow: auto;
+        }
+
+        pre code {
+            display: block;
+            padding: 24px 0;
+            font: 13px/1.7 "JetBrains Mono", monospace;
+            tab-size: 2;
+            background: transparent !important;
+        }
+
+        .ln {
+            display: block;
+            padding: 0 24px 0 0;
+            white-space: pre;
+        }
+
+        .ln::before {
+            content: attr(data-n);
+            display: inline-block;
+            width: 60px;
+            padding-right: 24px;
+            text-align: right;
+            color: #3e4352;
+            user-select: none;
+        }
+
+        .err {
+            padding: 24px;
+            color: #ef4444;
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: var(--mute);
+            font-size: 13px;
+            font-weight: 300;
+            padding: 40px 24px;
+            border-top: 1px solid var(--line);
+            letter-spacing: 0.05em;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 3px;
+        }
+
+        @media(max-width: 768px) {
+            .dev {
+                display: none;
+            }
+
+            .bar h2 {
+                width: 100%;
+                order: -1;
+                margin: 0 0 6px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .top-wrapper {
+                top: 10px;
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ambient"></div>
+
+    <!-- Redesigned Floating Navbar -->
+    <div class="top-wrapper">
+        <header class="top">
+            <a class="logo" href="#">
+                <img src="favicon.jfif" alt="Logo">
+                <span>FSWD PORTAL</span>
+            </a>
+            <div class="status-badge">
+                <span class="dot"></span> Active Session
+            </div>
+            <span class="sp"></span>
+            <a class="nav-link" href="https://github.com/codeBilal-exe/FSWD-LAB" target="_blank" rel="noopener">GitHub
+                ↗</a>
+            <button id="theme" aria-label="Toggle theme">◐</button>
+        </header>
+    </div>
+
+    <!-- Main Gallery View -->
+    <section id="home">
+        <div class="hero">
+            <span class="tag mono">Full Stack Web Development</span>
+            <h1>Interactive Laboratory Portfolio &amp; <span>Source Inspector</span></h1>
+            <p>A live gallery of your lab work. Preview each page, switch device sizes, and inspect its source code.</p>
+            <div class="stats" id="stats"></div>
+        </div>
+        <div id="gallery"></div>
+    </section>
+
+    <!-- Detail/Preview View -->
+    <section id="view">
+        <div class="bar">
+            <button id="back">← Directory</button>
+            <h2 id="title"></h2>
+            <div class="seg"><button id="bPrev" class="on">Preview</button><button id="bCode">Source</button></div>
+            <div class="seg dev" id="dev"><button data-d="" class="on">Desktop</button><button
+                    data-d="tablet">Tablet</button><button data-d="mobile">Mobile</button></div>
+            <span class="sp"></span>
+            <button id="prev">←</button><button id="next">→</button>
+            <a class="nav-link" id="openTab" target="_blank" rel="noopener">Open ↗</a>
+        </div>
+        <div class="stage">
+            <iframe id="frame" class="frame" title="Lab preview"></iframe>
+            <div class="code" id="code">
+                <div class="tabs" id="tabs"></div>
+                <div class="tools"><span id="path" class="mono"></span><span class="sp"></span><a id="gh"
+                        target="_blank" rel="noopener">GitHub Source ↗</a><button id="copy">Copy</button></div>
+                <pre><code id="src"></code></pre>
+            </div>
+        </div>
+    </section>
+
+    <footer>Lab pages are discovered from the repository · Preview, resize, and inspect source</footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        const REPO = "codeBilal-exe/FSWD-LAB", BRANCH = "main";
+        let LABS = [], ALL = [];
+        const $ = id => document.getElementById(id);
+        const ext = f => f.split(".").pop(), base = f => f.split("/").pop();
+        const enc = p => p.split("/").map(encodeURIComponent).join("/");
+        const lang = f => ({ html: "xml", css: "css", js: "javascript" }[ext(f)] || "plaintext");
+        const cache = {}; let cur, curFile, idx = 0;
+
+        /* Theme Switcher */
+        const root = document.documentElement;
+        root.dataset.theme = localStorage.getItem("t") || (matchMedia("(prefers-color-scheme:light)").matches ? "light" : "dark");
+        $("theme").onclick = () => { root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark"; try { localStorage.setItem("t", root.dataset.theme) } catch (e) { } };
+
+        function readableName(path) {
+            const parts = path.split("/");
+            const parent = parts[parts.length - 2] || "";
+            let name = parts[parts.length - 1];
+            if (/^index\.html?$/i.test(name) || /^task[-_ ]*\d+/i.test(parent)) name = parent;
+            else name = name.replace(/\.html?$/i, "");
+            return name.replace(/^task[-_ ]*\d*[-_ ]*/i, "").replace(/[_-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase()) || "Web Page";
+        }
+        function makeId(path) { return path.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+
+        async function discoverLabs() {
+            const response = await fetch(`https://api.github.com/repos/${REPO}/git/trees/${BRANCH}?recursive=1`, { headers: { Accept: "application/vnd.github+json" } });
+            if (!response.ok) throw new Error(`GitHub could not list the repository (${response.status}).`);
+            const tree = await response.json();
+            const files = (tree.tree || []).filter(x => x.type === "blob").map(x => x.path);
+            const pages = files.filter(path => /^LAB-[^/]+\//i.test(path) && /\.html?$/i.test(path) && !(path.split("/").length === 2 && /^index\.html?$/i.test(path.split("/").pop())));
+            const folders = [...new Set(pages.map(path => path.split("/")[0]))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+            LABS = folders.map(folder => {
+                const taskPages = pages.filter(path => path.startsWith(folder + "/"));
+                const items = taskPages.map(page => {
+                    const dir = page.slice(0, page.lastIndexOf("/"));
+                    const related = files.filter(file => file.slice(0, file.lastIndexOf("/")) === dir && /\.(html?|css|js)$/i.test(file));
+                    if (!related.includes(page)) related.unshift(page);
+                    return { id: makeId(page), name: readableName(page), desc: `Live preview of ${readableName(page)}. Open the source tab to inspect its HTML, CSS, and JavaScript.`, page, files: related.sort((a, b) => a === page ? -1 : b === page ? 1 : a.localeCompare(b)) };
+                });
+                return { group: folder.replace(/-/g, " "), sub: `${items.length} task${items.length === 1 ? "" : "s"} discovered`, items };
+            }).filter(group => group.items.length);
+            ALL = LABS.flatMap(group => group.items);
+            renderPortal();
+            route();
+        }
+
+        function renderPortal() {
+            $("stats").innerHTML = `
+  <div class="stat-box"><b>${LABS.length}</b><span>Lab Modules</span></div>
+  <div class="stat-box"><b>${ALL.length}</b><span>Task Previews</span></div>
+  <div class="stat-box"><b>${ALL.reduce((n, item) => n + item.files.length, 0)}</b><span>Source Files</span></div>`;
+            if (!ALL.length) {
+                $("gallery").innerHTML = `<div class="empty-state"><h2>No lab pages found</h2><p>Add an HTML page inside a <code>LAB-*</code> folder, then push it to the configured GitHub branch.</p></div>`;
+                return;
+            }
+            $("gallery").innerHTML = LABS.map(group => `<div class="grp"><h2>${group.group}</h2><span>${group.sub}</span><i></i></div><div class="grid">` +
+                group.items.map(item => `<a class="card" href="#${item.id}" aria-label="Preview ${item.name}">
+  <div class="window-bar"><span class="dot-btn r"></span><span class="dot-btn y"></span><span class="dot-btn g"></span><span class="window-title mono">${group.group} / ${item.name}</span></div>
+  <div class="thumb"><iframe src="${enc(item.page)}" loading="lazy" tabindex="-1" title="${item.name} preview"></iframe></div>
+  <div class="body"><h3>${item.name}</h3><p>${item.desc}</p><div class="row">${[...new Set(item.files.map(ext))].map(e => `<span class="chip mono ${e}">${e.toUpperCase()}</span>`).join("")}<span class="go">Preview task</span></div></div>
+ </a>`).join("") + `</div>`).join("");
+            fit();
+        }
+        discoverLabs().catch(error => {
+            $("stats").innerHTML = `<div class="stat-box"><b>!</b><span>Discovery unavailable</span></div>`;
+            $("gallery").innerHTML = `<div class="empty-state"><h2>Could not load lab folders</h2><p>${error.message} Use the portal from the published repository, or check the repository name and branch in the README.</p></div>`;
+        });
+        function fit() { document.querySelectorAll(".thumb").forEach(t => t.querySelector("iframe").style.transform = `scale(${t.clientWidth / 1280})`) }
+        addEventListener("resize", fit);
+
+        /* Detail View Loading Logic */
+        async function source(f) {
+            if (cache[f] != null) return cache[f];
+            for (const u of [enc(f), `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${enc(f)}`]) {
+                try { const r = await fetch(u); if (r.ok) return cache[f] = await r.text() } catch (e) { }
+            }
+            throw new Error("Could not load " + f);
+        }
+        async function showFile(f) {
+            curFile = f;
+            document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("act", b.dataset.f === f));
+            $("path").textContent = f; $("gh").href = `https://github.com/${REPO}/blob/${BRANCH}/${enc(f)}`;
+            const el = $("src"); el.textContent = "Loading source…";
+            try {
+                const t = await source(f); if (f !== curFile) return;
+                if (!t.trim()) { el.textContent = "// File is empty"; return }
+                const h = window.hljs ? hljs.highlight(t, { language: lang(f), ignoreIllegals: true }).value : t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+                el.innerHTML = h.split("\n").map((l, i) => `<span class="ln" data-n="${i + 1}">${l}</span>`).join("");
+            } catch (e) { el.innerHTML = `<div class="err">${e.message}</div>` }
+        }
+        function setView(v) {
+            $("bPrev").classList.toggle("on", v === "prev"); $("bCode").classList.toggle("on", v === "code");
+            $("frame").style.display = v === "prev" ? "block" : "none"; $("code").style.display = v === "code" ? "flex" : "none";
+            $("dev").style.visibility = v === "prev" ? "visible" : "hidden";
+        }
+        function open(id) {
+            idx = ALL.findIndex(i => i.id === id); cur = ALL[idx];
+            $("home").style.display = "none"; $("view").style.display = "flex";
+            $("title").textContent = cur.name; $("frame").src = enc(cur.page); $("openTab").href = enc(cur.page);
+            $("tabs").innerHTML = cur.files.map(f => `<button data-f="${f}">${base(f)}</button>`).join("");
+            setView("prev"); showFile(cur.files[0]); scrollTo(0, 0);
+        }
+        function route() {
+            const id = location.hash.slice(1);
+            if (ALL.some(i => i.id === id)) open(id);
+            else { $("view").style.display = "none"; $("home").style.display = "block"; $("frame").src = "about:blank"; fit() }
+        }
+        const go = d => { location.hash = ALL[(idx + d + ALL.length) % ALL.length].id };
+        $("back").onclick = () => location.hash = "";
+        $("prev").onclick = () => go(-1); $("next").onclick = () => go(1);
+        $("bPrev").onclick = () => setView("prev"); $("bCode").onclick = () => setView("code");
+        $("tabs").onclick = e => { if (e.target.dataset.f) showFile(e.target.dataset.f) };
+        $("dev").onclick = e => {
+            const d = e.target.dataset.d; if (d === undefined) return;
+            $("frame").className = "frame " + d; document.querySelectorAll("#dev button").forEach(b => b.classList.toggle("on", b === e.target))
+        };
+        $("copy").onclick = async e => { try { await navigator.clipboard.writeText(cache[curFile] || ""); e.target.textContent = "Copied ✓" } catch (_) { e.target.textContent = "Failed" } setTimeout(() => e.target.textContent = "Copy", 1400) };
+        addEventListener("hashchange", route);
+        route(); fit(); addEventListener("load", fit);
+    </script>
+</body>
+
+</html>
