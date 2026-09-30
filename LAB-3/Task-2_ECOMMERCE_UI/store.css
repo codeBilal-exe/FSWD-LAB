@@ -1,0 +1,54 @@
+body {
+  background: #f7f8fa;
+  color: #18212f;
+}
+.store-brand {
+  letter-spacing: -0.06em;
+}
+.store-hero {
+  background:
+    radial-gradient(circle at 80% 45%, #f9dfbd 0 12%, transparent 34%),
+    linear-gradient(120deg, #fff8ef, #f3eee7);
+}
+.product-art {
+  min-height: 190px;
+  display: grid;
+  place-items: center;
+  border-radius: 0.75rem;
+  font-size: 5rem;
+}
+.art-audio {
+  background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+}
+.art-bag {
+  background: linear-gradient(135deg, #fce7d6, #f4c7a1);
+}
+.art-watch {
+  background: linear-gradient(135deg, #d8f3e8, #a7e5ce);
+}
+.art-shoes {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+}
+.art-camera {
+  background: linear-gradient(135deg, #e5e7eb, #cbd5e1);
+}
+.art-lamp {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+}
+.eyebrow {
+  letter-spacing: 0.14em;
+}
+.cart-thumb {
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  border-radius: 0.75rem;
+  font-size: 2.5rem;
+  flex: 0 0 auto;
+}
+@media (max-width: 575.98px) {
+  .product-art {
+    min-height: 150px;
+  }
+}

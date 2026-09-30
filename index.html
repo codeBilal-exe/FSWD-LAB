@@ -360,7 +360,50 @@
             text-align: center;
         }
 
-        .empty-state h2 { color: var(--text); font-size: 20px; }
+        .empty-state h2 {
+            color: var(--text);
+            font-size: 20px;
+        }
+
+        .directory-head {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin: 64px 0 24px;
+        }
+
+        .directory-head[hidden] {
+            display: none;
+        }
+
+        .directory-head>a {
+            color: var(--gold);
+            white-space: nowrap;
+        }
+
+        .directory-head h2 {
+            margin: 0;
+            font: 700 22px "Cinzel Decorative", serif;
+        }
+
+        .directory-head p {
+            margin: 4px 0 0;
+            color: var(--mute);
+        }
+
+        .lab-card .body {
+            min-height: 170px;
+        }
+
+        .lab-card .lab-icon {
+            color: var(--gold);
+            font-size: 30px;
+            line-height: 1;
+        }
+
+        .lab-card .row {
+            margin-top: 6px;
+        }
 
         .card {
             display: flex;
@@ -793,9 +836,20 @@
             <span class="tag mono">Full Stack Web Development</span>
             <h1>Interactive Laboratory Portfolio &amp; <span>Source Inspector</span></h1>
             <p>A live gallery of your lab work. Preview each page, switch device sizes, and inspect its source code.</p>
-            <div class="stats" id="stats"></div>
         </div>
-        <div id="gallery"></div>
+        <div id="directory-head" class="directory-head" hidden>
+            <a class="nav-link" href="#">← All labs</a>
+            <div>
+                <h2 id="directory-title"></h2>
+                <p id="directory-subtitle"></p>
+            </div>
+        </div>
+        <div id="gallery">
+            <div class="empty-state">
+                <h2>Loading labs…</h2>
+                <p>Finding lab folders and task pages.</p>
+            </div>
+        </div>
     </section>
 
     <!-- Detail/Preview View -->
@@ -838,11 +892,11 @@
         root.dataset.theme = localStorage.getItem("t") || (matchMedia("(prefers-color-scheme:light)").matches ? "light" : "dark");
         $("theme").onclick = () => { root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark"; try { localStorage.setItem("t", root.dataset.theme) } catch (e) { } };
 
-        function readableName(path) {
+        function readableName(path, directoryPageCount = 1) {
             const parts = path.split("/");
             const parent = parts[parts.length - 2] || "";
             let name = parts[parts.length - 1];
-            if (/^index\.html?$/i.test(name) || /^task[-_ ]*\d+/i.test(parent)) name = parent;
+            if (/^index\.html?$/i.test(name) || (/^task[-_ ]*\d+/i.test(parent) && directoryPageCount === 1)) name = parent;
             else name = name.replace(/\.html?$/i, "");
             return name.replace(/^task[-_ ]*\d*[-_ ]*/i, "").replace(/[_-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase()) || "Web Page";
         }
@@ -857,13 +911,16 @@
             const folders = [...new Set(pages.map(path => path.split("/")[0]))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
             LABS = folders.map(folder => {
                 const taskPages = pages.filter(path => path.startsWith(folder + "/"));
+                const labId = makeId(folder);
                 const items = taskPages.map(page => {
                     const dir = page.slice(0, page.lastIndexOf("/"));
+                    const directoryPageCount = taskPages.filter(candidate => candidate.slice(0, candidate.lastIndexOf("/")) === dir).length;
                     const related = files.filter(file => file.slice(0, file.lastIndexOf("/")) === dir && /\.(html?|css|js)$/i.test(file));
                     if (!related.includes(page)) related.unshift(page);
-                    return { id: makeId(page), name: readableName(page), desc: `Live preview of ${readableName(page)}. Open the source tab to inspect its HTML, CSS, and JavaScript.`, page, files: related.sort((a, b) => a === page ? -1 : b === page ? 1 : a.localeCompare(b)) };
+                    const name = readableName(page, directoryPageCount);
+                    return { id: makeId(page), labId, name, desc: `Live preview of ${name}. Open the source tab to inspect its HTML, CSS, and JavaScript.`, page, files: related.sort((a, b) => a === page ? -1 : b === page ? 1 : a.localeCompare(b)) };
                 });
-                return { group: folder.replace(/-/g, " "), sub: `${items.length} task${items.length === 1 ? "" : "s"} discovered`, items };
+                return { id: labId, group: folder.replace(/-/g, " "), sub: `${items.length} task${items.length === 1 ? "" : "s"}`, items };
             }).filter(group => group.items.length);
             ALL = LABS.flatMap(group => group.items);
             renderPortal();
@@ -871,24 +928,30 @@
         }
 
         function renderPortal() {
-            $("stats").innerHTML = `
-  <div class="stat-box"><b>${LABS.length}</b><span>Lab Modules</span></div>
-  <div class="stat-box"><b>${ALL.length}</b><span>Task Previews</span></div>
-  <div class="stat-box"><b>${ALL.reduce((n, item) => n + item.files.length, 0)}</b><span>Source Files</span></div>`;
             if (!ALL.length) {
                 $("gallery").innerHTML = `<div class="empty-state"><h2>No lab pages found</h2><p>Add an HTML page inside a <code>LAB-*</code> folder, then push it to the configured GitHub branch.</p></div>`;
                 return;
             }
-            $("gallery").innerHTML = LABS.map(group => `<div class="grp"><h2>${group.group}</h2><span>${group.sub}</span><i></i></div><div class="grid">` +
-                group.items.map(item => `<a class="card" href="#${item.id}" aria-label="Preview ${item.name}">
+            $("directory-head").hidden = true;
+            $("gallery").innerHTML = `<div class="grp"><h2>Your Labs</h2><span>${LABS.length} lab${LABS.length === 1 ? "" : "s"}</span><i></i></div><div class="grid">` +
+                LABS.map(group => `<a class="card lab-card" href="#${group.id}" aria-label="Open ${group.group}">
+  <div class="window-bar"><span class="dot-btn r"></span><span class="dot-btn y"></span><span class="dot-btn g"></span><span class="window-title mono">${group.group}</span></div>
+  <div class="body"><span class="lab-icon" aria-hidden="true">▤</span><h3>${group.group}</h3><p>Open this lab to browse its tasks and live previews.</p><div class="row"><span class="chip mono">${group.items.length} TASK${group.items.length === 1 ? "" : "S"}</span><span class="go">Open lab</span></div></div>
+ </a>`).join("") + `</div>`;
+            fit();
+        }
+        function renderTasks(group) {
+            $("directory-head").hidden = false;
+            $("directory-title").textContent = group.group;
+            $("directory-subtitle").textContent = `${group.items.length} task${group.items.length === 1 ? "" : "s"} in this lab`;
+            $("gallery").innerHTML = `<div class="grid">` + group.items.map(item => `<a class="card" href="#${item.id}" aria-label="Preview ${item.name}">
   <div class="window-bar"><span class="dot-btn r"></span><span class="dot-btn y"></span><span class="dot-btn g"></span><span class="window-title mono">${group.group} / ${item.name}</span></div>
   <div class="thumb"><iframe src="${enc(item.page)}" loading="lazy" tabindex="-1" title="${item.name} preview"></iframe></div>
   <div class="body"><h3>${item.name}</h3><p>${item.desc}</p><div class="row">${[...new Set(item.files.map(ext))].map(e => `<span class="chip mono ${e}">${e.toUpperCase()}</span>`).join("")}<span class="go">Preview task</span></div></div>
- </a>`).join("") + `</div>`).join("");
+ </a>`).join("") + `</div>`;
             fit();
         }
         discoverLabs().catch(error => {
-            $("stats").innerHTML = `<div class="stat-box"><b>!</b><span>Discovery unavailable</span></div>`;
             $("gallery").innerHTML = `<div class="empty-state"><h2>Could not load lab folders</h2><p>${error.message} Use the portal from the published repository, or check the repository name and branch in the README.</p></div>`;
         });
         function fit() { document.querySelectorAll(".thumb").forEach(t => t.querySelector("iframe").style.transform = `scale(${t.clientWidth / 1280})`) }
@@ -928,11 +991,17 @@
         }
         function route() {
             const id = location.hash.slice(1);
-            if (ALL.some(i => i.id === id)) open(id);
-            else { $("view").style.display = "none"; $("home").style.display = "block"; $("frame").src = "about:blank"; fit() }
+            const task = ALL.find(i => i.id === id);
+            if (task) { open(id); return; }
+            $("view").style.display = "none";
+            $("home").style.display = "block";
+            $("frame").src = "about:blank";
+            const lab = LABS.find(group => group.id === id);
+            if (lab) renderTasks(lab);
+            else if (ALL.length) renderPortal();
         }
         const go = d => { location.hash = ALL[(idx + d + ALL.length) % ALL.length].id };
-        $("back").onclick = () => location.hash = "";
+        $("back").onclick = () => location.hash = cur ? cur.labId : "";
         $("prev").onclick = () => go(-1); $("next").onclick = () => go(1);
         $("bPrev").onclick = () => setView("prev"); $("bCode").onclick = () => setView("code");
         $("tabs").onclick = e => { if (e.target.dataset.f) showFile(e.target.dataset.f) };

@@ -1,0 +1,144 @@
+﻿<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Checkout — Northstar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="store.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar bg-white border-bottom">
+        <div class="container-xl d-flex flex-wrap justify-content-between gap-2 py-2"><a
+                class="navbar-brand fw-bold fs-3 store-brand" href="index.html">northstar<span
+                    class="text-primary">.</span></a><span class="small text-secondary">🔒 Secure checkout</span><a
+                class="link-dark small" href="cart.html">← Return to bag</a></div>
+    </nav>
+    <main class="container-xl py-4 py-lg-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="d-flex align-items-center justify-content-center gap-3 gap-md-5 mb-4 small"><span
+                        class="text-success fw-semibold">✓ Bag</span><span class="text-primary fw-bold">2 ·
+                        Information</span><span class="text-secondary">3 · Confirmation</span></div>
+                <div class="row g-4">
+                    <section class="col-lg-7">
+                        <h1 class="h2 fw-semibold">Checkout</h1>
+                        <p class="text-secondary">Almost there. Let us know where to send your order.</p>
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-3 p-md-4">
+                                <form action="index.html" method="get">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h2 class="h5 mb-0">Contact information</h2><a class="small link-dark"
+                                            href="login.html">Log in</a>
+                                    </div>
+                                    <div class="mb-3"><label class="form-label" for="email">Email address</label><input
+                                            class="form-control" id="email" type="email" name="email"
+                                            autocomplete="email" placeholder="you@example.com" required></div>
+                                    <div class="form-check mb-4"><input class="form-check-input" type="checkbox"
+                                            id="updates"><label class="form-check-label small" for="updates">Email me
+                                            with occasional news and offers</label></div>
+                                    <h2 class="h5 mb-3">Shipping address</h2>
+                                    <div class="row g-3">
+                                        <div class="col-sm-6"><label class="form-label" for="first">First
+                                                name</label><input class="form-control" id="first"
+                                                autocomplete="given-name" required></div>
+                                        <div class="col-sm-6"><label class="form-label" for="last">Last
+                                                name</label><input class="form-control" id="last"
+                                                autocomplete="family-name" required></div>
+                                        <div class="col-12"><label class="form-label"
+                                                for="address">Address</label><input class="form-control" id="address"
+                                                autocomplete="street-address" placeholder="Street and number" required>
+                                        </div>
+                                        <div class="col-12"><label class="form-label" for="address2">Apartment, suite,
+                                                etc. <span class="text-secondary">(optional)</span></label><input
+                                                class="form-control" id="address2" placeholder="Unit, floor, building">
+                                        </div>
+                                        <div class="col-sm-6"><label class="form-label" for="city">City</label><input
+                                                class="form-control" id="city" autocomplete="address-level2" required>
+                                        </div>
+                                        <div class="col-sm-6"><label class="form-label" for="region">State /
+                                                Region</label><input class="form-control" id="region"
+                                                autocomplete="address-level1" required></div>
+                                        <div class="col-sm-6"><label class="form-label" for="postal">Postal
+                                                code</label><input class="form-control" id="postal"
+                                                autocomplete="postal-code" required></div>
+                                        <div class="col-sm-6"><label class="form-label"
+                                                for="country">Country</label><select class="form-select" id="country"
+                                                autocomplete="country-name">
+                                                <option>United States</option>
+                                                <option>Canada</option>
+                                                <option>United Kingdom</option>
+                                                <option>Pakistan</option>
+                                            </select></div>
+                                        <div class="col-12"><label class="form-label" for="phone">Phone <span
+                                                    class="text-secondary">(for delivery updates)</span></label><input
+                                                class="form-control" id="phone" type="tel" autocomplete="tel"
+                                                placeholder="(555) 555-5555"></div>
+                                    </div>
+                                    <hr class="my-4">
+                                    <h2 class="h5 mb-3">Delivery method</h2>
+                                    <div class="form-check border rounded-3 p-3 ps-5 mb-2"><input class="form-check-input" type="radio" name="delivery" id="standard" checked><label class="form-check-label w-100" for="standard"><span class="d-flex justify-content-between"><strong>Standard delivery</strong><strong class="text-success">Free</strong></span><span class="small text-secondary">Arrives in 3–5 business days</span></label></div>
+                                    <div class="form-check border rounded-3 p-3 ps-5 mb-4"><input class="form-check-input" type="radio" name="delivery" id="express"><label class="form-check-label w-100" for="express"><span class="d-flex justify-content-between"><strong>Express delivery</strong><strong>$8.00</strong></span><span class="small text-secondary">Arrives in 1–2 business days</span></label></div>
+                                    <h2 class="h5 mb-3">Payment</h2>
+                                    <div class="border rounded-3 p-3 mb-3"><div class="d-flex justify-content-between align-items-center"><div class="form-check"><input class="form-check-input" type="radio" name="payment" id="card" checked><label class="form-check-label fw-semibold" for="card">Credit or debit card</label></div><span class="small text-secondary">VISA · MC · AMEX</span></div><div class="row g-3 mt-1"><div class="col-12"><label class="form-label" for="card-number">Card number</label><input class="form-control" id="card-number" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" required></div><div class="col-12"><label class="form-label" for="card-name">Name on card</label><input class="form-control" id="card-name" autocomplete="cc-name" placeholder="Name as it appears on card" required></div><div class="col-sm-6"><label class="form-label" for="expiry">Expiration date</label><input class="form-control" id="expiry" autocomplete="cc-exp" placeholder="MM / YY" required></div><div class="col-sm-6"><label class="form-label" for="security">Security code</label><input class="form-control" id="security" inputmode="numeric" autocomplete="cc-csc" placeholder="CVC" required></div></div></div>
+                                    <div class="form-check mb-4"><input class="form-check-input" type="checkbox" id="billing"><label class="form-check-label small" for="billing">Billing address is the same as shipping address</label></div>
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-4"><a
+                                            href="cart.html" class="link-dark">← Return to bag</a><button type="submit"
+                                            class="btn btn-dark btn-lg">Place order · $235.44</button></div>
+                                </form>
+                            </div>
+                        </div>
+                        <p class="small text-secondary mt-3">Your information is encrypted and used only to process your
+                            order.</p>
+                    </section>
+                    <aside class="col-lg-5">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <h2 class="h5 mb-3">Your order <span class="badge text-bg-light">2 items</span></h2>
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="cart-thumb art-audio position-relative">🎧<span
+                                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-secondary">1</span>
+                                    </div>
+                                    <div class="flex-grow-1"><strong>Studio Wireless Headphones</strong>
+                                        <div class="small text-secondary">Midnight</div>
+                                    </div><span>$129.00</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-3 mb-4">
+                                    <div class="cart-thumb art-watch position-relative">⌚<span
+                                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-secondary">1</span>
+                                    </div>
+                                    <div class="flex-grow-1"><strong>Form Everyday Watch</strong>
+                                        <div class="small text-secondary">Silver</div>
+                                    </div><span>$89.00</span>
+                                </div><a href="cart.html" class="small link-secondary">Edit bag</a>
+                                <hr>
+                                <div class="input-group mb-3"><label class="visually-hidden" for="discount">Discount
+                                        code</label><input class="form-control" id="discount"
+                                        placeholder="Discount code"><button class="btn btn-outline-secondary"
+                                        type="button">Apply</button></div>
+                                <div class="d-flex justify-content-between py-1">
+                                    <span>Subtotal</span><span>$218.00</span></div>
+                                <div class="d-flex justify-content-between py-1"><span>Shipping</span><span
+                                        class="text-success">Free</span></div>
+                                <div class="d-flex justify-content-between py-1"><span>Estimated
+                                        tax</span><span>$17.44</span></div>
+                                <hr>
+                                <div class="d-flex justify-content-between fs-5 fw-bold"><span>Total</span><span>USD
+                                        $235.44</span></div>
+                                <div class="small text-secondary mt-3">🔒 Encrypted checkout · Easy 30-day returns</div>
+                            </div>
+                        </div>
+                        <div class="border rounded-3 bg-white p-3 mt-3 small"><strong>Need a hand?</strong>
+                            <p class="text-secondary mb-0">Our team is here for you at hello@northstar.example.</p>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="text-center text-secondary small py-4">Northstar · Secure checkout · © 2026</footer>
+</body>
+
+</html>

@@ -37,3 +37,13 @@ FSWD-LAB/
     └── Task-2_FACEBOOK/
         ├── L2-facebook-home.html
         └── L2-facebook-home.css
+
+## Portal Navigation
+
+The portal uses a three-step flow:
+
+1. The home page shows lab cards only.
+2. Selecting a lab opens its task cards.
+3. Selecting a task opens the live preview and source inspector.
+
+The preview's **Directory** button returns to the task list for the lab you opened. New HTML pages discovered in a `LAB-*` folder automatically become task cards; no card markup needs to be added by hand.
