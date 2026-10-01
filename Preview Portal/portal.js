@@ -228,8 +228,10 @@ function open(id) {
     $("title").textContent = cur.name;
     $("bPrev").disabled = !cur.page; $("bPrev").hidden = !cur.page;
     $("bCompile").hidden = !cur.files.some(file => /\.js$/i.test(file));
-    $("frame").src = cur.page ? enc(cur.page) : "about:blank";
     $("frame").removeAttribute("sandbox");
+    $("frame").removeAttribute("srcdoc");
+    $("frame").srcdoc = "";
+    $("frame").src = cur.page ? enc(cur.page) : "about:blank";
     $("openTab").hidden = !cur.page;
     if (cur.page) $("openTab").href = enc(cur.page);
     $("tabs").innerHTML = cur.files.map(f => `<button data-f="${f}">${base(f)}</button>`).join("");
@@ -243,6 +245,9 @@ function route() {
     $("view").classList.remove("preview-mode", "toolbar-hidden");
     $("view").style.display = "none";
     $("home").style.display = "block";
+    $("frame").removeAttribute("sandbox");
+    $("frame").removeAttribute("srcdoc");
+    $("frame").srcdoc = "";
     $("frame").src = "about:blank";
     const lab = LABS.find(group => group.id === id);
     if (lab) renderTasks(lab);
@@ -266,7 +271,14 @@ updateAnalogClock();
 
 $("back").onclick = () => location.hash = cur ? cur.labId : "";
 $("prev").onclick = () => go(-1); $("next").onclick = () => go(1);
-$("bPrev").onclick = () => { compiledOutput = false; $("frame").removeAttribute("sandbox"); $("frame").src = enc(cur.page); setView("prev") };
+$("bPrev").onclick = () => { 
+    compiledOutput = false; 
+    $("frame").removeAttribute("sandbox"); 
+    $("frame").removeAttribute("srcdoc");
+    $("frame").srcdoc = "";
+    $("frame").src = enc(cur.page); 
+    setView("prev"); 
+};
 $("bCode").onclick = () => { compiledOutput = false; setView("code") };
 $("bCompile").onclick = async () => {
     if (!curFile || !/\.js$/i.test(curFile)) return;
@@ -275,24 +287,47 @@ $("bCompile").onclick = async () => {
     try {
         const js = await source(curFile);
         const safeSource = JSON.stringify(js).replace(/</g, "\\u003c");
-        const runner = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>*{box-sizing:border-box}body{margin:0;padding:24px;background:#090a0d;color:#eceae5;font:14px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}header{color:#d4af37;font:600 11px/1.4 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}pre{white-space:pre-wrap;overflow-wrap:anywhere;margin:0;padding:20px;border:1px solid rgba(212,175,55,.2);border-radius:10px;background:#11131a;min-height:80px}</style></head><body><header>JavaScript Console Output</header><pre id="output">Running ${curFile.replace(/[&<>"']/g, "")}…</pre><script>
+        const runner = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>*{box-sizing:border-box}body{margin:0;padding:24px;background:#090a0d;color:#eceae5;font:14px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;display:flex;flex-direction:column;min-height:100vh}.runner-head{display:flex;align-items:center;justify-content:space-between;color:#d4af37;font:600 11px/1.4 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}.runner-btn{background:rgba(212,175,55,0.12);border:1px solid rgba(212,175,55,0.3);color:#d4af37;padding:5px 14px;border-radius:6px;cursor:pointer;font:500 12px system-ui,sans-serif;transition:all 0.2s ease}.runner-btn:hover{background:#d4af37;color:#090a0d}pre{white-space:pre-wrap;overflow-wrap:anywhere;margin:0;padding:20px;border:1px solid rgba(212,175,55,.2);border-radius:10px;background:#11131a;flex:1;min-height:160px;font:13px/1.7 "JetBrains Mono",Consolas,monospace;color:#eceae5}</style></head><body><div class="runner-head"><span>JavaScript Console Output</span><button class="runner-btn" onclick="location.reload()">↺ Re-run Program</button></div><pre id="output">Running ${curFile.replace(/[&<>"']/g, "")}…</pre><script>
 const output=document.getElementById("output"), lines=[];
 const format=value=>{if(typeof value==="string")return value;try{const json=JSON.stringify(value,null,2);return json===undefined?String(value):json}catch(_){return String(value)}};
 const render=()=>{output.textContent=lines.length?lines.join("\\n"):"Execution completed with no console output."};
 ["log","info","warn","error","debug"].forEach(method=>console[method]=(...args)=>{lines.push(args.map(format).join(" "));render()});
 console.clear=()=>{lines.length=0;render()};
+
+window.prompt=(msg,def)=>{
+    let res=null;
+    try{ res=window.parent?window.parent.prompt(msg||"Enter value:",def||""):prompt(msg||"Enter value:",def||""); }catch(e){ res=prompt(msg||"Enter value:",def||""); }
+    lines.push("[Prompt Input] "+(msg||"Prompt")+": "+(res!==null?res:"(cancelled)"));
+    render();
+    return res;
+};
+
+window.alert=(msg)=>{
+    lines.push("[Alert] "+msg);
+    render();
+    try{ if(window.parent) window.parent.alert(msg); else alert(msg); }catch(_){}
+};
+
+window.confirm=(msg)=>{
+    let res=false;
+    try{ res=window.parent?window.parent.confirm(msg):confirm(msg); }catch(e){ res=confirm(msg); }
+    lines.push("[Confirm] "+msg+" -> "+res);
+    render();
+    return res;
+};
+
 window.onerror=(message,_source,line,column,error)=>{lines.push("Error: "+(error&&error.stack?error.stack:message+" (line "+line+":"+column+")"));render();return true};
 window.addEventListener("unhandledrejection",event=>{lines.push("Error: "+format(event.reason));render()});
 try{const task=document.createElement("script");task.textContent=${safeSource};document.body.appendChild(task);render()}catch(error){lines.push("Error: "+(error.stack||error));render()}
 <\/script></body></html>`;
         compiledOutput = true;
-        $("frame").setAttribute("sandbox", "allow-scripts");
+        $("frame").setAttribute("sandbox", "allow-scripts allow-modals allow-same-origin");
         $("frame").srcdoc = runner;
         setView("prev");
     } catch (error) {
         const safeError = String(error.message || error).replace(/[&<>]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[char]);
         compiledOutput = true;
-        $("frame").setAttribute("sandbox", "allow-scripts");
+        $("frame").setAttribute("sandbox", "allow-scripts allow-modals allow-same-origin");
         $("frame").srcdoc = `<pre style="padding:24px;color:#fca5a5;background:#090a0d;font:14px/1.6 monospace">${safeError}</pre>`;
         setView("prev");
     } finally {
