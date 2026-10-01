@@ -34,6 +34,43 @@ function flattenJsDelivrTree(entries, parent = "") {
         return entry.type === "directory" ? flattenJsDelivrTree(entry.files, path) : [{ type: "blob", path }];
     });
 }
+const STATIC_REPO_TREE = [
+    { type: "blob", path: "LAB-1/L1-calculator-style.css" },
+    { type: "blob", path: "LAB-1/L1-calculator.html" },
+    { type: "blob", path: "LAB-1/calculato-fun.js" },
+    { type: "blob", path: "LAB-2/Task-1_TIMETABLE/L2-class-timetable.css" },
+    { type: "blob", path: "LAB-2/Task-1_TIMETABLE/L2-class-timetable.html" },
+    { type: "blob", path: "LAB-2/Task-2_FACEBOOK/L2-facebook-home.css" },
+    { type: "blob", path: "LAB-2/Task-2_FACEBOOK/L2-facebook-home.html" },
+    { type: "blob", path: "LAB-2/Task-3_PORTFOLIO/L2-portfolio.css" },
+    { type: "blob", path: "LAB-2/Task-3_PORTFOLIO/L2-portfolio.html" },
+    { type: "blob", path: "LAB-2/Task-4_CUSTOM_UI/custom-ui.css" },
+    { type: "blob", path: "LAB-2/Task-4_CUSTOM_UI/custom-ui.html" },
+    { type: "blob", path: "LAB-2/Task-5_IEEE_PAPER/L2-ieee-paper-template.css" },
+    { type: "blob", path: "LAB-2/Task-5_IEEE_PAPER/L2-ieee-paper-template.html" },
+    { type: "blob", path: "LAB-3/Task-1_BOOTSTRAP_REDO_LAB2/Task-1_TIMETABLE/index.html" },
+    { type: "blob", path: "LAB-3/Task-1_BOOTSTRAP_REDO_LAB2/Task-2_FACEBOOK/index.html" },
+    { type: "blob", path: "LAB-3/Task-1_BOOTSTRAP_REDO_LAB2/Task-3_PORTFOLIO/index.html" },
+    { type: "blob", path: "LAB-3/Task-1_BOOTSTRAP_REDO_LAB2/Task-4_CUSTOM_UI/index.html" },
+    { type: "blob", path: "LAB-3/Task-1_BOOTSTRAP_REDO_LAB2/Task-5_IEEE_PAPER/index.html" },
+    { type: "blob", path: "LAB-3/Task-1_BOOTSTRAP_REDO_LAB2/shared.css" },
+    { type: "blob", path: "LAB-3/Task-2_ECOMMERCE_UI/cart.html" },
+    { type: "blob", path: "LAB-3/Task-2_ECOMMERCE_UI/checkout.html" },
+    { type: "blob", path: "LAB-3/Task-2_ECOMMERCE_UI/index.html" },
+    { type: "blob", path: "LAB-3/Task-2_ECOMMERCE_UI/login.html" },
+    { type: "blob", path: "LAB-3/Task-2_ECOMMERCE_UI/product.html" },
+    { type: "blob", path: "LAB-3/Task-2_ECOMMERCE_UI/reviews.html" },
+    { type: "blob", path: "LAB-3/Task-2_ECOMMERCE_UI/shop.html" },
+    { type: "blob", path: "LAB-3/Task-2_ECOMMERCE_UI/signup.html" },
+    { type: "blob", path: "LAB-3/Task-2_ECOMMERCE_UI/store.css" },
+    { type: "blob", path: "LAB-4/task1_biography.js" },
+    { type: "blob", path: "LAB-4/task2_next_prime.js" },
+    { type: "blob", path: "LAB-4/task3_phone_number.js" },
+    { type: "blob", path: "LAB-4/task4_roundMe.js" },
+    { type: "blob", path: "LAB-4/task5_abs_ceil_floor.js" },
+    { type: "blob", path: "LAB-4/task6_sum_of_multiples.js" }
+];
+
 async function fetchRepositoryTree() {
     const errors = [];
     try {
@@ -53,7 +90,7 @@ async function fetchRepositoryTree() {
         const cached = JSON.parse(localStorage.getItem(TREE_CACHE_KEY) || "null");
         if (cached && Array.isArray(cached.tree)) return cached.tree;
     } catch (_) { }
-    throw new Error(`Could not fetch the repository file list. ${errors.join("; ")}`);
+    return STATIC_REPO_TREE;
 }
 async function discoverLabs() {
     const tree = await fetchRepositoryTree();
