@@ -69,7 +69,7 @@ label:focus-visible {
   border-radius: 4px;
 }
 
-/* ---- Nav ---- */
+
 .nav {
   position: sticky;
   top: env(safe-area-inset-top, 0px);
@@ -122,7 +122,7 @@ label:focus-visible {
   color: var(--accent);
 }
 
-/* CSS-only hamburger: a hidden checkbox driven by a <label>, no JS */
+
 .nav__check {
   position: absolute;
   opacity: 0;
@@ -186,7 +186,7 @@ main {
   z-index: 1;
 }
 
-/* ---- Hero ---- */
+
 .hero {
   max-width: var(--max);
   margin: 0 auto;
@@ -400,7 +400,7 @@ main {
   color: var(--accent);
 }
 
-/* ---- Sections ---- */
+
 .section {
   max-width: var(--max);
   margin: 0 auto;

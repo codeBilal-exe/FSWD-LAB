@@ -1040,7 +1040,7 @@
 <body>
     <div class="ambient"></div>
 
-    <!-- Redesigned Floating Navbar -->
+    
     <div class="top-wrapper">
         <header class="top">
             <a class="logo" href="#">
@@ -1057,7 +1057,7 @@
         </header>
     </div>
 
-    <!-- Main Gallery View -->
+    
     <section id="home">
         <div class="hero">
             <div class="hero-layout">
@@ -1106,7 +1106,7 @@
         </div>
     </section>
 
-    <!-- Detail/Preview View -->
+    
     <section id="view">
         <div class="bar" id="preview-toolbar">
             <button id="back">← Directory</button>
@@ -1134,6 +1134,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script>
         const REPO = "codeBilal-exe/FSWD-LAB", BRANCH = "main";
+        const TREE_CACHE_KEY = `fswd-lab-tree:${REPO}:${BRANCH}`;
         let LABS = [], ALL = [];
         const $ = id => document.getElementById(id);
         const ext = f => f.split(".").pop(), base = f => f.split("/").pop();
@@ -1157,11 +1158,41 @@
         }
         function makeId(path) { return path.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
 
+        async function fetchJson(url, options = {}) {
+            const response = await fetch(url, { ...options, signal: AbortSignal.timeout(10000) });
+            if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+            return response.json();
+        }
+        function flattenJsDelivrTree(entries, parent = "") {
+            return (entries || []).flatMap(entry => {
+                const path = parent ? `${parent}/${entry.name}` : entry.name;
+                return entry.type === "directory" ? flattenJsDelivrTree(entry.files, path) : [{ type: "blob", path }];
+            });
+        }
+        async function fetchRepositoryTree() {
+            const errors = [];
+            try {
+                const tree = await fetchJson(`https://api.github.com/repos/${REPO}/git/trees/${BRANCH}?recursive=1`, { headers: { Accept: "application/vnd.github+json" } });
+                if (!Array.isArray(tree.tree)) throw new Error("GitHub returned an invalid repository tree.");
+                try { localStorage.setItem(TREE_CACHE_KEY, JSON.stringify({ savedAt: Date.now(), tree: tree.tree })); } catch (_) { }
+                return tree.tree;
+            } catch (error) { errors.push(`GitHub API: ${error.message}`); }
+            try {
+                const listing = await fetchJson(`https://data.jsdelivr.com/v1/package/gh/${REPO}@${BRANCH}`);
+                if (!Array.isArray(listing.files)) throw new Error("jsDelivr returned an invalid file listing.");
+                const tree = flattenJsDelivrTree(listing.files);
+                try { localStorage.setItem(TREE_CACHE_KEY, JSON.stringify({ savedAt: Date.now(), tree })); } catch (_) { }
+                return tree;
+            } catch (error) { errors.push(`jsDelivr: ${error.message}`); }
+            try {
+                const cached = JSON.parse(localStorage.getItem(TREE_CACHE_KEY) || "null");
+                if (cached && Array.isArray(cached.tree)) return cached.tree;
+            } catch (_) { }
+            throw new Error(`Could not fetch the repository file list. ${errors.join("; ")}`);
+        }
         async function discoverLabs() {
-            const response = await fetch(`https://api.github.com/repos/${REPO}/git/trees/${BRANCH}?recursive=1`, { headers: { Accept: "application/vnd.github+json" } });
-            if (!response.ok) throw new Error(`GitHub could not list the repository (${response.status}).`);
-            const tree = await response.json();
-            const files = (tree.tree || []).filter(x => x.type === "blob").map(x => x.path);
+            const tree = await fetchRepositoryTree();
+            const files = tree.filter(x => x.type === "blob").map(x => x.path);
             const pages = files.filter(path => /^LAB-[^/]+\//i.test(path) && /\.html?$/i.test(path) && !(path.split("/").length === 2 && /^index\.html?$/i.test(path.split("/").pop())));
             const folders = [...new Set(pages.map(path => path.split("/")[0]))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
             LABS = folders.map(folder => {
@@ -1215,7 +1246,7 @@
             fit();
         }
         discoverLabs().catch(error => {
-            $("gallery").innerHTML = `<div class="empty-state"><h2>Could not load lab folders</h2><p>${error.message} Use the portal from the published repository, or check the repository name and branch in the README.</p></div>`;
+            $("gallery").innerHTML = `<div class="empty-state"><h2>Could not load lab folders</h2><p>${error.message} Check your internet connection and reload this page.</p></div>`;
         });
         function fit() { document.querySelectorAll(".thumb").forEach(t => t.querySelector("iframe").style.transform = `scale(${t.clientWidth / 1280})`) }
         addEventListener("resize", fit);
@@ -1223,7 +1254,7 @@
         /* Detail View Loading Logic */
         async function source(f) {
             if (cache[f] != null) return cache[f];
-            for (const u of [enc(f), `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${enc(f)}`]) {
+            for (const u of [enc(f), `https://cdn.jsdelivr.net/gh/${REPO}@${BRANCH}/${enc(f)}`, `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${enc(f)}`]) {
                 try { const r = await fetch(u); if (r.ok) return cache[f] = await r.text() } catch (e) { }
             }
             throw new Error("Could not load " + f);

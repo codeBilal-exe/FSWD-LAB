@@ -2,24 +2,24 @@
 
 <img src="favicon.png" alt="Bilal monogram logo" width="150">
 
-# FSWD·LAB
 
-### _Full Stack Web Development: a lab journal, built in public._
+
+
 
 From a first `<div>` to a working e-commerce store, every lab lives here and runs in the browser.
 
-[![Live Portal](https://img.shields.io/badge/LIVE-PORTAL-d4af37?style=for-the-badge&labelColor=090a0d)](https://codeBilal-exe.github.io/FSWD-LAB/)
-[![Labs](https://img.shields.io/badge/LABS-3-d4af37?style=for-the-badge&labelColor=090a0d)](#-the-labs)
-[![Bootstrap](https://img.shields.io/badge/BOOTSTRAP-5.3-7952b3?style=for-the-badge&logo=bootstrap&logoColor=white&labelColor=090a0d)](https://getbootstrap.com)
-[![Status](https://img.shields.io/badge/STATUS-ACTIVE-2ea043?style=for-the-badge&labelColor=090a0d)](#)
+[![Live Portal](https:
+[![Labs](https:
+[![Bootstrap](https:
+[![Status](https:
 
-[**Open the Portal**](https://codeBilal-exe.github.io/FSWD-LAB/) · [**Browse the Labs**](#-the-labs) · [**Featured: Frostline Store**](#-featured-frostline-winter-jacket-store)
+[**Open the Portal**](https:
 
 </div>
 
 ---
 
-## ✦ About
+
 
 This repository collects my **Full Stack Web Development** lab work in one place. It has a **live portal** that finds every task on its own and lets you open the running page and read its source side by side.
 
@@ -32,7 +32,7 @@ This repository collects my **Full Stack Web Development** lab work in one place
 
 ---
 
-## ✦ The Portal
+
 
 The root [`index.html`](index.html) is a small site that drills down in three levels:
 
@@ -48,15 +48,15 @@ The root [`index.html`](index.html) is a small site that drills down in three le
 
 ---
 
-## ✦ The Labs
 
-### 🧮 Lab 1: Foundations
+
+
 
 | Task                    | What it is                                | Tech            |
 | ----------------------- | ----------------------------------------- | --------------- |
 | [Calculator UI](LAB-1/) | A working calculator with a styled keypad | HTML · CSS · JS |
 
-### 🎨 Lab 2: Layout and Design
+
 
 | Task                                                 | What it is                                     | Tech       |
 | ---------------------------------------------------- | ---------------------------------------------- | ---------- |
@@ -66,7 +66,7 @@ The root [`index.html`](index.html) is a small site that drills down in three le
 | [Custom UI: Classroom Next](LAB-2/Task-4_CUSTOM_UI/) | A semester dashboard concept                   | HTML · CSS |
 | [IEEE Paper Template](LAB-2/Task-5_IEEE_PAPER/)      | Two-column IEEE-style paper layout             | HTML · CSS |
 
-### 🚀 Lab 3: Bootstrap
+
 
 | Task                                                         | What it is                                                        | Tech             |
 | ------------------------------------------------------------ | ----------------------------------------------------------------- | ---------------- |
@@ -75,7 +75,7 @@ The root [`index.html`](index.html) is a small site that drills down in three le
 
 ---
 
-## ❄ Featured: Frostline (Winter Jacket Store)
+
 
 The Lab 3 capstone is **Frostline**, a complete e-commerce front end for a winter jacket brand. It needs no backend: the cart, account and reviews are stored with `localStorage`.
 
@@ -96,57 +96,57 @@ The Lab 3 capstone is **Frostline**, a complete e-commerce front end for a winte
 
 ---
 
-## ✦ Project Structure
+
 
 ```text
 FSWD-LAB/
-├── index.html                       # Lab portal (auto-discovers everything below)
-├── favicon.png                      # The "B" monogram
+├── index.html                       
+├── favicon.png                      
 ├── README.md
 │
-├── LAB-1/                           # Calculator UI
+├── LAB-1/                           
 │   ├── L1-calculator.html
 │   ├── L1-calculator-style.css
 │   └── calculato-fun.js
 │
-├── LAB-2/                           # Plain HTML and CSS
+├── LAB-2/                           
 │   ├── Task-1_TIMETABLE/
 │   ├── Task-2_FACEBOOK/
 │   ├── Task-3_PORTFOLIO/
 │   ├── Task-4_CUSTOM_UI/
 │   └── Task-5_IEEE_PAPER/
 │
-└── LAB-3/                           # Bootstrap 5
-    ├── Task-1_BOOTSTRAP_REDO_LAB2/  # Lab 2 rebuilt with Bootstrap
+└── LAB-3/                           
+    ├── Task-1_BOOTSTRAP_REDO_LAB2/  
     │   ├── shared.css
     │   └── Task-1 … Task-5/index.html
-    └── Task-2_ECOMMERCE_UI/         # Frostline store
+    └── Task-2_ECOMMERCE_UI/         
         ├── index.html   shop.html   product.html
         ├── login.html   signup.html reviews.html
         ├── cart.html    checkout.html
-        ├── store.css                # Theme and components
-        └── store.js                 # Products, cart, navbar, footer
+        ├── store.css                
+        └── store.js                 
 ```
 
 ---
 
-## ✦ Run It Locally
+
 
 ```bash
-# 1. Clone
-git clone https://github.com/codeBilal-exe/FSWD-LAB.git
+
+git clone https:
 cd FSWD-LAB
 
-# 2. Serve it (the portal needs a web server, not file://)
+
 python -m http.server 8000
-# then open http://localhost:8000
+
 ```
 
 Individual tasks, such as the store, can also be opened by double-clicking their `index.html`. Only the **portal's auto-discovery** needs a server.
 
 ---
 
-## ✦ Add a New Task
+
 
 1. Create `LAB-<number>/Task-<number>_<NAME>/`.
 2. Put the task's pages and assets inside, with an `index.html` as the entry page.
@@ -158,18 +158,18 @@ The portal picks it up the next time it loads, and no card markup is needed. If 
 
 ---
 
-## ✦ Tech and Credits
 
-- [Bootstrap 5.3](https://getbootstrap.com): layout, components and form validation
-- [highlight.js](https://highlightjs.org): the source inspector
-- [Google Fonts](https://fonts.google.com): Outfit, Inter, JetBrains Mono, Cinzel Decorative
-- Product photography in the store demo: [Unsplash](https://unsplash.com)
+
+- [Bootstrap 5.3](https:
+- [highlight.js](https:
+- [Google Fonts](https:
+- Product photography in the store demo: [Unsplash](https:
 
 ---
 
 <div align="center">
 
-**Built lab by lab by [Muhammad Bilal](https://github.com/codeBilal-exe)**
+**Built lab by lab by [Muhammad Bilal](https:
 
 <img src="favicon.png" alt="" width="48">
 
