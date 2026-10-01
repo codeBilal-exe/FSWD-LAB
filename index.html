@@ -598,6 +598,19 @@
             pointer-events: none;
         }
 
+        .source-only {
+            width: 100%;
+            height: 100%;
+            min-height: 150px;
+            display: grid;
+            place-items: center;
+            color: var(--mute);
+            background: linear-gradient(135deg, var(--panel), var(--card));
+            font-size: 13px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
         .thumb::after {
             content: "";
             position: absolute;
@@ -1193,10 +1206,10 @@
         async function discoverLabs() {
             const tree = await fetchRepositoryTree();
             const files = tree.filter(x => x.type === "blob").map(x => x.path);
-            const pages = files.filter(path => /^LAB-[^/]+\//i.test(path) && /\.html?$/i.test(path) && !(path.split("/").length === 2 && /^index\.html?$/i.test(path.split("/").pop())));
-            const folders = [...new Set(pages.map(path => path.split("/")[0]))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+            const folders = [...new Set(files.map(path => path.split("/")[0]).filter(name => /^LAB-\d+$/i.test(name)))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
             LABS = folders.map(folder => {
-                const taskPages = pages.filter(path => path.startsWith(folder + "/"));
+                const labFiles = files.filter(path => path.startsWith(folder + "/"));
+                const taskPages = labFiles.filter(path => /\.html?$/i.test(path) && !(path.split("/").length === 2 && /^index\.html?$/i.test(path.split("/").pop())));
                 const labId = makeId(folder);
                 const directPages = taskPages.filter(page => page.slice(0, page.lastIndexOf("/")) === folder);
                 const taskDirs = [...new Set(taskPages.map(page => page.slice(0, page.lastIndexOf("/"))).filter(dir => dir !== folder))];
@@ -1208,14 +1221,22 @@
                         return { dir, page, pages: taskFiles };
                     })
                 ];
+                const htmlDirs = new Set(taskPages.map(page => page.slice(0, page.lastIndexOf("/"))));
+                const sourceDirs = [...new Set(labFiles
+                    .filter(file => /\.(css|js)$/i.test(file))
+                    .map(file => file.slice(0, file.lastIndexOf("/"))))]
+                    .filter(dir => !htmlDirs.has(dir) && (dir !== folder || !directPages.length) &&
+                        !taskPages.some(page => page.startsWith(dir + "/")));
+                sourceDirs.forEach(dir => units.push({ dir, page: null, pages: [] }));
                 const items = units.map(unit => {
-                    const related = files.filter(file => file.slice(0, file.lastIndexOf("/")) === unit.dir && /\.(html?|css|js)$/i.test(file));
-                    if (!related.includes(unit.page)) related.unshift(unit.page);
-                    const name = readableName(unit.page, unit.pages.length);
-                    return { id: makeId(unit.page), labId, name, desc: `Live preview of ${name}. Use the source tabs to inspect all pages and assets in this task.`, page: unit.page, files: related.sort((a, b) => a === unit.page ? -1 : b === unit.page ? 1 : a.localeCompare(b)) };
+                    const related = labFiles.filter(file => file.slice(0, file.lastIndexOf("/")) === unit.dir && /\.(html?|css|js)$/i.test(file));
+                    if (unit.page && !related.includes(unit.page)) related.unshift(unit.page);
+                    const name = unit.page ? readableName(unit.page, unit.pages.length) : unit.dir.split("/").pop().replace(/^task[-_ ]*\d*[-_ ]*/i, "").replace(/[_-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase()) || "Source Files";
+                    const previewable = Boolean(unit.page);
+                    return { id: makeId(unit.page || unit.dir), labId, name, desc: previewable ? `Live preview of ${name}. Use the source tabs to inspect all pages and assets in this task.` : `Source files for ${name}. Open the task to inspect its code.`, page: unit.page, files: related.sort((a, b) => a === unit.page ? -1 : b === unit.page ? 1 : a.localeCompare(b)) };
                 });
                 return { id: labId, group: labLabel(folder), sub: `${items.length} task${items.length === 1 ? "" : "s"}`, items };
-            }).filter(group => group.items.length);
+            });
             ALL = LABS.flatMap(group => group.items);
             renderPortal();
             route();
@@ -1223,7 +1244,7 @@
 
         function renderPortal() {
             if (!ALL.length) {
-                $("gallery").innerHTML = `<div class="empty-state"><h2>No lab pages found</h2><p>Add an HTML page inside a <code>LAB-*</code> folder, then push it to the configured GitHub branch.</p></div>`;
+                $("gallery").innerHTML = `<div class="empty-state"><h2>No lab folders found</h2><p>Add files to a <code>LAB-1</code>, <code>LAB-2</code>, or similarly named folder, then push it to the configured GitHub branch.</p></div>`;
                 return;
             }
             $("directory-head").hidden = true;
@@ -1238,10 +1259,10 @@
             $("directory-head").hidden = false;
             $("directory-title").textContent = group.group;
             $("directory-subtitle").textContent = `${group.items.length} task${group.items.length === 1 ? "" : "s"} in this lab`;
-            $("gallery").innerHTML = `<div class="grid">` + group.items.map(item => `<a class="card" href="#${item.id}" aria-label="Preview ${item.name}">
+            $("gallery").innerHTML = `<div class="grid">` + group.items.map(item => `<a class="card" href="#${item.id}" aria-label="${item.page ? "Preview" : "Inspect source for"} ${item.name}">
   <div class="window-bar"><span class="dot-btn r"></span><span class="dot-btn y"></span><span class="dot-btn g"></span><span class="window-title mono">${group.group} / ${item.name}</span></div>
-  <div class="thumb"><iframe src="${enc(item.page)}" loading="lazy" tabindex="-1" title="${item.name} preview"></iframe></div>
-  <div class="body"><h3>${item.name}</h3><p>${item.desc}</p><div class="row">${[...new Set(item.files.map(ext))].map(e => `<span class="chip mono ${e}">${e.toUpperCase()}</span>`).join("")}<span class="go">Preview task</span></div></div>
+  ${item.page ? `<div class="thumb"><iframe src="${enc(item.page)}" loading="lazy" tabindex="-1" title="${item.name} preview"></iframe></div>` : `<div class="thumb"><div class="source-only mono">Source files only</div></div>`}
+  <div class="body"><h3>${item.name}</h3><p>${item.desc}</p><div class="row">${[...new Set(item.files.map(ext))].map(e => `<span class="chip mono ${e}">${e.toUpperCase()}</span>`).join("")}<span class="go">${item.page ? "Preview task" : "Inspect source"}</span></div></div>
  </a>`).join("") + `</div>`;
             fit();
         }
@@ -1272,9 +1293,10 @@
             } catch (e) { el.innerHTML = `<div class="err">${e.message}</div>` }
         }
         function setView(v) {
+            if (!cur?.page) v = "code";
             $("bPrev").classList.toggle("on", v === "prev"); $("bCode").classList.toggle("on", v === "code");
             $("frame").style.display = v === "prev" ? "block" : "none"; $("code").style.display = v === "code" ? "flex" : "none";
-            $("dev").style.visibility = v === "prev" ? "visible" : "hidden";
+            $("dev").style.visibility = v === "prev" && cur?.page ? "visible" : "hidden";
             $("view").classList.toggle("preview-mode", v === "prev");
             $("view").classList.remove("toolbar-hidden");
             $("preview-toolbar").classList.remove("is-hidden");
@@ -1310,9 +1332,13 @@
         function open(id) {
             idx = ALL.findIndex(i => i.id === id); cur = ALL[idx];
             $("home").style.display = "none"; $("view").style.display = "flex";
-            $("title").textContent = cur.name; $("frame").src = enc(cur.page); $("openTab").href = enc(cur.page);
+            $("title").textContent = cur.name;
+            $("bPrev").disabled = !cur.page; $("bPrev").hidden = !cur.page;
+            $("frame").src = cur.page ? enc(cur.page) : "about:blank";
+            $("openTab").hidden = !cur.page;
+            if (cur.page) $("openTab").href = enc(cur.page);
             $("tabs").innerHTML = cur.files.map(f => `<button data-f="${f}">${base(f)}</button>`).join("");
-            setView("prev"); showFile(cur.files[0]); scrollTo(0, 0);
+            setView(cur.page ? "prev" : "code"); showFile(cur.files[0]); scrollTo(0, 0);
         }
         function route() {
             const id = location.hash.slice(1);
