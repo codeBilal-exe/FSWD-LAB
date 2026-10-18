@@ -6,17 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FSWD Lab Portal</title>
     <link rel="icon" type="image/png" href="favicon.png">
+    <script>
+        document.documentElement.classList.add('js');
+        try { document.documentElement.dataset.theme = localStorage.getItem('t') || (matchMedia('(prefers-color-scheme:light)').matches ? 'light' : 'dark'); }
+        catch (e) { document.documentElement.dataset.theme = 'dark'; }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-    <link rel="stylesheet" href="Preview%20Portal/portal.css">
+    <link rel="stylesheet" href="Preview-Portal/portal.css">
 </head>
 
 <body>
     <div class="ambient"></div>
+    <div class="rv-progress" id="progress"></div>
 
     <div class="top-wrapper">
         <header class="top">
@@ -24,50 +30,87 @@
                 <span class="logo-mark"><img src="./favicon.png?v=2" alt="codeBilal mark"></span>
                 <span>codeBilal.exe</span>
             </a>
-            <div class="status-badge">
-                <span class="dot"></span> Active Session
-            </div>
             <span class="sp"></span>
-            <a class="nav-link" href="https://github.com/codeBilal-exe/FSWD-LAB" target="_blank" rel="noopener">GitHub
-                ↗</a>
-            <button id="theme" aria-label="Toggle theme">◐</button>
+            <a class="nav-link github-link" href="https://github.com/codeBilal-exe/FSWD-LAB" target="_blank"
+                rel="noopener">GitHub</a>
+            <button id="theme" class="mode-switch" type="button" role="switch" aria-checked="true"
+                aria-label="Dark mode" title="Switch theme">
+                <span class="mode-switch-track" aria-hidden="true">
+                    <span class="mode-switch-knob">
+                        <svg class="mode-sun" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="4" />
+                            <path
+                                d="M12 1.8v2.4M12 19.8v2.4M4.79 4.79l1.7 1.7m11.02 11.02 1.7 1.7M1.8 12h2.4m15.6 0h2.4M4.79 19.21l1.7-1.7M17.51 6.49l1.7-1.7" />
+                        </svg>
+                        <svg class="mode-moon" viewBox="0 0 24 24">
+                            <path d="M20.5 15.2A8.6 8.6 0 0 1 8.8 3.5a8.8 8.8 0 1 0 11.7 11.7Z" />
+                        </svg>
+                    </span>
+                </span>
+            </button>
         </header>
     </div>
+
+    <a id="backLabs" class="back-labs" href="#" aria-label="Back to Labs" hidden>
+        <svg aria-hidden="true" viewBox="0 0 20 20">
+            <path d="M8 4 2.5 10 8 16M3 10h14" />
+        </svg>
+        <span>Back to Labs</span>
+    </a>
 
     <section id="home">
         <div class="hero">
             <div class="hero-layout">
                 <div class="hero-copy">
-                    <span class="tag mono">Full Stack Web Development</span>
-                    <h1>See every lab in motion,<span> one click at a time.</span></h1>
-                    <p>Preview, resize, and inspect the code behind each build. A clean lab dashboard for practice,
-                        progress, and polished UI work.</p>
+                    <span class="tag mono" data-reveal>Full Stack Web Development</span>
+                    <h1 data-reveal style="--rd:90ms">See every lab in motion,<span> one click at a time.</span></h1>
+                    <p data-reveal style="--rd:180ms">Preview, resize, and inspect the code behind each build. A clean
+                        lab
+                        dashboard for practice, progress, and polished UI work.</p>
                 </div>
-                <div class="clock-panel">
-                    <div aria-label="Current time clock" class="clock">
-                        <div class="clock-num">
-                            <span style="top: 8%; left: 50%;">12</span>
-                            <span style="top: 15%; left: 71%;">1</span>
-                            <span style="top: 29%; left: 85%;">2</span>
-                            <span style="top: 50%; left: 92%;">3</span>
-                            <span style="top: 71%; left: 85%;">4</span>
-                            <span style="top: 85%; left: 71%;">5</span>
-                            <span style="top: 92%; left: 50%;">6</span>
-                            <span style="top: 85%; left: 29%;">7</span>
-                            <span style="top: 71%; left: 15%;">8</span>
-                            <span style="top: 50%; left: 8%;">9</span>
-                            <span style="top: 29%; left: 15%;">10</span>
-                            <span style="top: 15%; left: 29%;">11</span>
+
+                <div class="rv-scene" id="scene" aria-hidden="true">
+                    <div class="rv-orbit">
+                        <i class="rv-ring r1"></i><i class="rv-ring r2"></i><i class="rv-ring r3"></i>
+                        <div class="clock-panel">
+                            <div aria-label="Current time clock" class="clock">
+                                <div class="clock-num"><span style="top: 8%; left: 50%;">12</span><span
+                                        style="top: 15%; left: 71%;">1</span><span
+                                        style="top: 29%; left: 85%;">2</span><span
+                                        style="top: 50%; left: 92%;">3</span><span
+                                        style="top: 71%; left: 85%;">4</span><span
+                                        style="top: 85%; left: 71%;">5</span><span
+                                        style="top: 92%; left: 50%;">6</span><span
+                                        style="top: 85%; left: 29%;">7</span><span
+                                        style="top: 71%; left: 15%;">8</span><span
+                                        style="top: 50%; left: 8%;">9</span><span
+                                        style="top: 29%; left: 15%;">10</span><span
+                                        style="top: 15%; left: 29%;">11</span></div>
+                                <div id="hour-hand" class="clock-hand hour"></div>
+                                <div id="minute-hand" class="clock-hand minute"></div>
+                                <div id="second-hand" class="clock-hand second"></div>
+                                <div class="pivot"></div>
+                            </div>
                         </div>
-                        <div id="hour-hand" class="clock-hand hour"></div>
-                        <div id="minute-hand" class="clock-hand minute"></div>
-                        <div id="second-hand" class="clock-hand second"></div>
-                        <div class="pivot"></div>
                     </div>
+                    <div class="tech-float tech-html" data-reveal style="--rd:120ms"><b>&lt;/&gt;</b><span>HTML</span>
+                    </div>
+                    <div class="tech-float tech-css" data-reveal style="--rd:260ms"><b>#</b><span>CSS</span></div>
+                    <div class="tech-float tech-js" data-reveal style="--rd:400ms"><b>JS</b><span>JavaScript</span>
+                    </div>
+                    <div class="tech-float tech-node" data-reveal style="--rd:540ms"><b>⬡</b><span>Node.js</span></div>
+                    <div class="tech-float tech-db" data-reveal style="--rd:680ms"><b>▤</b><span>Database</span></div>
+                </div>
+            </div>
+
+            <div class="rv-marquee" aria-hidden="true">
+                <div class="rv-track">
+                    <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Node.js</span><span>Express</span><span>MongoDB</span><span>REST</span><span>React</span>
+                    <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Node.js</span><span>Express</span><span>MongoDB</span><span>REST</span><span>React</span>
                 </div>
             </div>
         </div>
-        <div id="directory-head" class="directory-head" hidden>
+        <div id="directory-head" class="directory-head" data-reveal hidden>
             <a class="nav-link" href="#">← All labs</a>
             <div>
                 <h2 id="directory-title"></h2>
@@ -86,7 +129,8 @@
         <div class="bar" id="preview-toolbar">
             <button id="back">← Directory</button>
             <h2 id="title"></h2>
-            <div class="seg"><button id="bPrev" class="on">Preview</button><button id="bCode">Source</button><button id="bCompile" hidden>▶ Compile</button></div>
+            <div class="seg"><button id="bPrev" class="on">Preview</button><button id="bCode">Source</button><button
+                    id="bCompile" hidden>▶ Compile</button></div>
             <div class="seg dev" id="dev"><button data-d="" class="on">Desktop</button><button
                     data-d="tablet">Tablet</button><button data-d="mobile">Mobile</button></div>
             <span class="sp"></span>
@@ -104,10 +148,11 @@
         </div>
     </section>
 
-    <footer>Lab pages are discovered from the repository · Preview, resize, and inspect source</footer>
+    <footer data-reveal>Lab pages are discovered from the repository · Preview, resize, and inspect source</footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script src="Preview%20Portal/portal.js"></script>
+    <script src="Preview-Portal/portal.js"></script>
+    <script src="Preview-Portal/revamp.js"></script>
 </body>
 
 </html>

@@ -3,7 +3,7 @@ var age = 22;
 var isStudent = true;
 var gpa = 3.45;
 var bioSummary =
-    'Passionate Software Engineering student focused on Full Stack Web Development.';
+  'Passionate Software Engineering student focused on Full Stack Web Development.';
 
 console.log('=== Part 1 & 2: Primitive Variables (using var) ===');
 console.log('Full Name: ' + fullName + ' (' + typeof fullName + ')');
@@ -42,7 +42,7 @@ function printBiography(bio) {
   console.log('Age: ' + bio.age + ' years old');
   console.log('Email: ' + bio.email);
   console.log(
-      'Student Status: ' + (bio.isStudent ? 'Currently Enrolled' : 'Graduated'),
+    'Student Status: ' + (bio.isStudent ? 'Currently Enrolled' : 'Graduated'),
   );
 
   console.log('\n-- Address Details --');
@@ -56,8 +56,8 @@ function printBiography(bio) {
   console.log('Department: ' + bio.degreeProgram.department);
   console.log('University: ' + bio.degreeProgram.university);
   console.log(
-      'Duration: ' + bio.degreeProgram.startYear + ' - ' +
-          bio.degreeProgram.expectedGraduation,
+    'Duration: ' + bio.degreeProgram.startYear + ' - ' +
+    bio.degreeProgram.expectedGraduation,
   );
   console.log('Semester: ' + bio.degreeProgram.currentSemester);
   console.log('CGPA: ' + bio.degreeProgram.cgpa);

@@ -1,0 +1,670 @@
+const REPO = 'codeBilal-exe/FSWD-LAB', BRANCH = 'main';
+const TREE_CACHE_KEY = `fswd-lab-tree:${REPO}:${BRANCH}`;
+let LABS = [], ALL = [];
+const $ = id => document.getElementById(id);
+const ext = f => f.split('.').pop(), base = f => f.split('/').pop();
+const enc = p => p.split('/').map(encodeURIComponent).join('/');
+const APP_ROOT = new URL('../', document.currentScript?.src || location.href);
+const repoPath = path => new URL(enc(path), APP_ROOT).href;
+const lang = f =>
+    ({html: 'xml', css: 'css', js: 'javascript', json: 'json'}[ext(f)] ||
+     'plaintext');
+const cache = {};
+let cur, curFile, idx = 0, compiledOutput = false;
+const labLabel = name => name.replace(/^LAB-/i, 'Lab ')
+                             .replace(/-/g, ' ')
+                             .replace(/\s+/g, ' ')
+                             .trim();
+function setBackLabs(destination) {
+  const control = $('backLabs');
+  control.hidden = destination == null;
+  control.classList.remove('auto-hide');
+  if (destination != null) control.href = destination;
+}
+
+/* Theme Switcher */
+const root = document.documentElement;
+let savedTheme = null;
+try {
+  savedTheme = localStorage.getItem('t');
+} catch (_) {
+}
+root.dataset.theme = savedTheme ||
+    (matchMedia('(prefers-color-scheme:light)').matches ? 'light' : 'dark');
+function updateThemeButton() {
+  const light = root.dataset.theme === 'light';
+  $('theme').setAttribute('aria-checked', String(!light));
+  $('theme').title = `Switch to ${light ? 'dark' : 'light'} mode`;
+}
+updateThemeButton();
+$('theme').onclick = e => {
+  const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  const apply = () => {
+    root.dataset.theme = next;
+    updateThemeButton();
+    try {
+      localStorage.setItem('t', next);
+    } catch (_) {
+    }
+  };
+  if (!document.startViewTransition ||
+      matchMedia('(prefers-reduced-motion: reduce)').matches)
+    return apply();
+  const r = e.currentTarget.getBoundingClientRect(), x = r.left + r.width / 2,
+        y = r.top + r.height / 2,
+        end = Math.hypot(
+                  Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) +
+      120;
+  root.style.setProperty('--vx', x + 'px');
+  root.style.setProperty('--vy', y + 'px');
+  root.style.setProperty('--vend', end + 'px');
+  document.startViewTransition(apply).finished.finally(
+      () => ['--vx', '--vy', '--vend'].forEach(
+          p => root.style.removeProperty(p)));
+};
+
+function readableName(path, directoryPageCount = 1) {
+  const parts = path.split('/');
+  const parent = parts[parts.length - 2] || '';
+  let name = parts[parts.length - 1];
+  if (/^index\.html?$/i.test(name) ||
+      (/^task[-_ ]*\d+/i.test(parent) && directoryPageCount === 1))
+    name = parent;
+  else
+    name = name.replace(/\.html?$/i, '');
+  return name.replace(/^task[-_ ]*\d*[-_ ]*/i, '')
+             .replace(/[_-]+/g, ' ')
+             .replace(/\b\w/g, c => c.toUpperCase()) ||
+      'Web Page';
+}
+function makeId(path) {
+  return path.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+async function fetchJson(url, options = {}) {
+  const response =
+      await fetch(url, {...options, signal: AbortSignal.timeout(10000)});
+  if (!response.ok)
+    throw new Error(`${response.status} ${response.statusText}`);
+  return response.json();
+}
+function flattenJsDelivrTree(entries, parent = '') {
+  return (entries || []).flatMap(entry => {
+    const path = parent ? `${parent}/${entry.name}` : entry.name;
+    return entry.type === 'directory' ? flattenJsDelivrTree(entry.files, path) :
+                                        [{type: 'blob', path}];
+  });
+}
+const STATIC_REPO_TREE = [
+  {type: 'blob', path: 'LAB-1/L1-calculator-style.css'},
+  {type: 'blob', path: 'LAB-1/L1-calculator.html'},
+  {type: 'blob', path: 'LAB-1/calculato-fun.js'},
+  {type: 'blob', path: 'LAB-2/Task-1_TIMETABLE/L2-class-timetable.css'},
+  {type: 'blob', path: 'LAB-2/Task-1_TIMETABLE/L2-class-timetable.html'},
+  {type: 'blob', path: 'LAB-2/Task-2_FACEBOOK/L2-facebook-home.css'},
+  {type: 'blob', path: 'LAB-2/Task-2_FACEBOOK/L2-facebook-home.html'},
+  {type: 'blob', path: 'LAB-2/Task-3_PORTFOLIO/L2-portfolio.css'},
+  {type: 'blob', path: 'LAB-2/Task-3_PORTFOLIO/L2-portfolio.html'},
+  {type: 'blob', path: 'LAB-2/Task-4_CUSTOM_UI/custom-ui.css'},
+  {type: 'blob', path: 'LAB-2/Task-4_CUSTOM_UI/custom-ui.html'},
+  {type: 'blob', path: 'LAB-2/Task-5_IEEE_PAPER/L2-ieee-paper-template.css'},
+  {type: 'blob', path: 'LAB-2/Task-5_IEEE_PAPER/L2-ieee-paper-template.html'},
+  {
+    type: 'blob',
+    path: 'LAB-3/Task-1_BOOTSTRAP_REDO_LAB2/Task-1_TIMETABLE/index.html'
+  },
+  {
+    type: 'blob',
+    path: 'LAB-3/Task-1_BOOTSTRAP_REDO_LAB2/Task-2_FACEBOOK/index.html'
+  },
+  {
+    type: 'blob',
+    path: 'LAB-3/Task-1_BOOTSTRAP_REDO_LAB2/Task-3_PORTFOLIO/index.html'
+  },
+  {
+    type: 'blob',
+    path: 'LAB-3/Task-1_BOOTSTRAP_REDO_LAB2/Task-4_CUSTOM_UI/index.html'
+  },
+  {
+    type: 'blob',
+    path: 'LAB-3/Task-1_BOOTSTRAP_REDO_LAB2/Task-5_IEEE_PAPER/index.html'
+  },
+  {type: 'blob', path: 'LAB-3/Task-1_BOOTSTRAP_REDO_LAB2/shared.css'},
+  {type: 'blob', path: 'LAB-3/Task-2_ECOMMERCE_UI/cart.html'},
+  {type: 'blob', path: 'LAB-3/Task-2_ECOMMERCE_UI/checkout.html'},
+  {type: 'blob', path: 'LAB-3/Task-2_ECOMMERCE_UI/index.html'},
+  {type: 'blob', path: 'LAB-3/Task-2_ECOMMERCE_UI/login.html'},
+  {type: 'blob', path: 'LAB-3/Task-2_ECOMMERCE_UI/product.html'},
+  {type: 'blob', path: 'LAB-3/Task-2_ECOMMERCE_UI/reviews.html'},
+  {type: 'blob', path: 'LAB-3/Task-2_ECOMMERCE_UI/shop.html'},
+  {type: 'blob', path: 'LAB-3/Task-2_ECOMMERCE_UI/signup.html'},
+  {type: 'blob', path: 'LAB-3/Task-2_ECOMMERCE_UI/store.css'},
+  {type: 'blob', path: 'LAB-4/task1_biography.js'},
+  {type: 'blob', path: 'LAB-4/task2_next_prime.js'},
+  {type: 'blob', path: 'LAB-4/task3_phone_number.js'},
+  {type: 'blob', path: 'LAB-4/task4_roundMe.js'},
+  {type: 'blob', path: 'LAB-4/task5_abs_ceil_floor.js'},
+  {type: 'blob', path: 'LAB-4/task6_sum_of_multiples.js'},
+  {type: 'blob', path: 'LAB-5/task1_admission_engine.js'},
+  {type: 'blob', path: 'LAB-5/task2_performance_engine.js'},
+  {type: 'blob', path: 'LAB-5/task3_profile_update.js'},
+  {type: 'blob', path: 'LAB-5/task4_user_hierarchy.js'},
+  {type: 'blob', path: 'LAB-5/task6_callback_registration.js'},
+  {type: 'blob', path: 'LAB-5/task7_promise_registration.js'},
+  {type: 'blob', path: 'LAB-5/task8_async_dashboard.js'},
+  {type: 'blob', path: 'LAB-5/task5_transcript_modules/Student.js'},
+  {type: 'blob', path: 'LAB-5/task5_transcript_modules/gradeUtils.js'},
+  {type: 'blob', path: 'LAB-5/task5_transcript_modules/main.js'},
+  {type: 'blob', path: 'LAB-5/task5_transcript_modules/package.json'},
+  {type: 'blob', path: 'LAB-5/task5_transcript_modules/transcriptService.js'},
+  {type: 'blob', path: 'LAB-6/task1_async_user_fetch.js'},
+  {type: 'blob', path: 'LAB-6/task2_promise_all.js'}
+];
+function includeKnownFiles(tree) {
+  const files = new Map();
+  [...(tree || []), ...STATIC_REPO_TREE].forEach(entry => {
+    if (entry.type === 'blob' && entry.path) files.set(entry.path, entry);
+  });
+  return [...files.values()];
+}
+
+async function fetchRepositoryTree() {
+  const errors = [];
+  try {
+    const tree = await fetchJson(
+        `https://api.github.com/repos/${REPO}/git/trees/${BRANCH}?recursive=1`,
+        {headers: {Accept: 'application/vnd.github+json'}});
+    if (!Array.isArray(tree.tree))
+      throw new Error('GitHub returned an invalid repository tree.');
+    const files = includeKnownFiles(tree.tree);
+    try {
+      localStorage.setItem(
+          TREE_CACHE_KEY, JSON.stringify({savedAt: Date.now(), tree: files}));
+    } catch (_) {
+    }
+    return files;
+  } catch (error) {
+    errors.push(`GitHub API: ${error.message}`);
+  }
+  try {
+    const listing = await fetchJson(
+        `https://data.jsdelivr.com/v1/package/gh/${REPO}@${BRANCH}`);
+    if (!Array.isArray(listing.files))
+      throw new Error('jsDelivr returned an invalid file listing.');
+    const tree = includeKnownFiles(flattenJsDelivrTree(listing.files));
+    try {
+      localStorage.setItem(
+          TREE_CACHE_KEY, JSON.stringify({savedAt: Date.now(), tree}));
+    } catch (_) {
+    }
+    return tree;
+  } catch (error) {
+    errors.push(`jsDelivr: ${error.message}`);
+  }
+  try {
+    const cached = JSON.parse(localStorage.getItem(TREE_CACHE_KEY) || 'null');
+    if (cached && Array.isArray(cached.tree))
+      return includeKnownFiles(cached.tree);
+  } catch (_) {
+  }
+  return STATIC_REPO_TREE;
+}
+async function discoverLabs() {
+  const tree = await fetchRepositoryTree();
+  const files = tree.filter(x => x.type === 'blob').map(x => x.path);
+  const folders = [
+    ...new Set(files.map(path => path.split('/')[0])
+                   .filter(name => /^LAB-\d+$/i.test(name)))
+  ].sort((a, b) => a.localeCompare(b, undefined, {numeric: true}));
+  LABS = folders.map(folder => {
+    const labFiles = files.filter(path => path.startsWith(folder + '/'));
+    const taskPages = labFiles.filter(
+        path => /\.html?$/i.test(path) &&
+            !(path.split('/').length === 2 &&
+              /^index\.html?$/i.test(path.split('/').pop())));
+    const labId = makeId(folder);
+    const directPages = taskPages.filter(
+        page => page.slice(0, page.lastIndexOf('/')) === folder);
+    const taskDirs =
+        [...new Set(taskPages.map(page => page.slice(0, page.lastIndexOf('/')))
+                        .filter(dir => dir !== folder))];
+    const units = [
+      ...directPages.map(page => ({dir: folder, page, pages: [page]})),
+      ...taskDirs.map(dir => {
+        const taskFiles = taskPages.filter(
+            page => page.slice(0, page.lastIndexOf('/')) === dir);
+        const page =
+            taskFiles.find(path => /^index\.html?$/i.test(base(path))) ||
+            taskFiles[0];
+        return {dir, page, pages: taskFiles};
+      })
+    ];
+    const directJs = labFiles.filter(
+        file => file.slice(0, file.lastIndexOf('/')) === folder &&
+            /\.js$/i.test(file));
+    if (!directPages.length)
+      directJs.forEach(
+          file => units.push(
+              {dir: folder, page: null, pages: [], sourceFile: file}));
+    const htmlDirs =
+        new Set(taskPages.map(page => page.slice(0, page.lastIndexOf('/'))));
+    const sourceDirs =
+        [...new Set(labFiles.filter(file => /\.(css|js)$/i.test(file))
+                        .map(file => file.slice(0, file.lastIndexOf('/'))))]
+            .filter(
+                dir => dir !== folder && !htmlDirs.has(dir) &&
+                    !taskPages.some(page => page.startsWith(dir + '/')));
+    sourceDirs.forEach(dir => units.push({dir, page: null, pages: []}));
+    const items = units.map(unit => {
+      const related = unit.sourceFile ?
+          [unit.sourceFile] :
+          labFiles.filter(
+              file => file.slice(0, file.lastIndexOf('/')) === unit.dir &&
+                  /\.(html?|css|js|json)$/i.test(file));
+      if (unit.page && !related.includes(unit.page)) related.unshift(unit.page);
+      const name = unit.page ?
+          readableName(unit.page, unit.pages.length) :
+          (unit.sourceFile ? base(unit.sourceFile).replace(/\.js$/i, '') :
+                             unit.dir.split('/').pop())
+                  .replace(/[_-]+/g, ' ')
+                  .replace(/\b\w/g, c => c.toUpperCase()) ||
+              'Source Files';
+      const previewable = Boolean(unit.page);
+      return {
+        id: makeId(unit.page || unit.sourceFile || unit.dir),
+        labId,
+        name,
+        desc: previewable ?
+            `Live preview of ${
+                name}. Use the source tabs to inspect all pages and assets in this task.` :
+            `Source files for ${name}. Open the task to inspect its code.`,
+        page: unit.page,
+        files: related.sort(
+            (a, b) => a === unit.page ? -1 :
+                b === unit.page       ? 1 :
+                                        a.localeCompare(b))
+      };
+    });
+    return {
+      id: labId,
+      group: labLabel(folder),
+      sub: `${items.length} task${items.length === 1 ? '' : 's'}`,
+      items
+    };
+  });
+  ALL = LABS.flatMap(group => group.items);
+  renderPortal();
+  route();
+}
+
+const CB =
+    '<i class="cb tl"></i><i class="cb tr"></i><i class="cb bl"></i><i class="cb br"></i>';
+const codeLines = () => '<div class="source-only mono">' +
+    [42, 68, 55, 80, 36, 62]
+        .map((w, k) => `<i style="--w:${w};--k:${k}"></i>`)
+        .join('') +
+    '<span>Source files only</span></div>';
+const chipsFor = files => [...new Set(files.map(ext))]
+                              .map(
+                                  e => `<span class="chip mono ${e}">${
+                                      e.toUpperCase()}</span>`)
+                              .join('');
+function renderPortal() {
+  if (!ALL.length) {
+    $('gallery').innerHTML =
+        `<div class="empty-state"><h2>No lab folders found</h2><p>Add files to a <code>LAB-1</code>, <code>LAB-2</code>, or similarly named folder, then push it to the configured GitHub branch.</p></div>`;
+    return;
+  }
+  $('directory-head').hidden = true;
+  $('gallery').innerHTML =
+      `<div class="grp"><h2>Your Labs</h2><span>${LABS.length} lab${
+          LABS.length === 1 ? '' : 's'}</span><i></i></div><div class="grid">` +
+      LABS.map(group => {
+            const first = group.items.find(i => i.page);
+            const sheets =
+                group.items.slice(0, 3)
+                    .map(
+                        (it, i) =>
+                            `<div class="sheet s${i + 1}"><b class="mono">${
+                                String(i + 1).padStart(2, '0')}</b><span>${
+                                it.name}</span><em class="mono">${
+                                    [...new Set(it.files.map(ext))].join(
+                                        ' · ')}</em></div>`)
+                    .join('');
+            return `<a class="card lab-card" href="#${
+                group.id}" aria-label="Open ${group.group}">
+  <div class="deck" aria-hidden="true">${sheets}</div>
+  <div class="window-bar"><span class="dot-btn r"></span><span class="dot-btn y"></span><span class="dot-btn g"></span><span class="window-title mono">${
+                group.group}</span></div>
+  <div class="thumb">${
+                first ?
+                    `<iframe src="${
+                        repoPath(
+                            first.page)}" loading="lazy" tabindex="-1" title="${
+                        group.group} preview"></iframe>` :
+                    codeLines()}${CB}<span class="cta">Open lab</span></div>
+  <div class="body"><h3>${
+                group
+                    .group}</h3><p>Open this lab to browse its tasks and live previews.</p><div class="row"><span class="chip mono">${
+                group.items.length} TASK${
+                group.items.length === 1 ? '' : 'S'}</span>${
+                chipsFor(group.items.flatMap(
+                    i => i.files))}<span class="go">Open lab</span></div></div>
+ </a>`;
+          })
+          .join('') +
+      `</div>`;
+  fit();
+}
+function renderTasks(group) {
+  $('directory-head').hidden = false;
+  $('directory-title').textContent = group.group;
+  $('directory-subtitle').textContent = `${group.items.length} task${
+      group.items.length === 1 ? '' : 's'} in this lab`;
+  $('gallery').innerHTML = `<div class="grid">` +
+      group.items
+          .map(
+              item => `<a class="card" href="#${item.id}" aria-label="${
+                  item.page ? 'Preview' : 'Inspect source for'} ${item.name}">
+  <div class="window-bar"><span class="dot-btn r"></span><span class="dot-btn y"></span><span class="dot-btn g"></span><span class="window-title mono">${
+                  group.group} / ${item.name}</span></div>
+  <div class="thumb">${
+                  item.page ?
+                      `<iframe src="${
+                          repoPath(
+                              item.page)}" loading="lazy" tabindex="-1" title="${
+                          item.name} preview"></iframe>` :
+                      codeLines()}${CB}<span class="cta">${
+                  item.page ? 'Preview' : 'Inspect'}</span></div>
+  <div class="body"><h3>${item.name}</h3><p>${item.desc}</p><div class="row">${
+                  chipsFor(item.files)}<span class="go">${
+                  item.page ? 'Preview task' :
+                              'Inspect source'}</span></div></div>
+ </a>`).join('') +
+      `</div>`;
+  fit();
+}
+discoverLabs().catch(error => {
+  $('gallery')
+      .innerHTML = `<div class="empty-state"><h2>Could not load lab folders</h2><p>${
+      error
+          .message} Check your internet connection and reload this page.</p></div>`;
+});
+function fit() {
+  document.querySelectorAll('.thumb').forEach(t => {
+    const frame = t.querySelector('iframe');
+    if (frame) frame.style.transform = `scale(${t.clientWidth / 1280})`
+  })
+}
+addEventListener('resize', fit);
+if (window.ResizeObserver)
+  new ResizeObserver(() => fit()).observe($('gallery'));
+
+/* Detail View Loading Logic */
+async function source(f) {
+  if (cache[f] != null) return cache[f];
+  for (const u
+           of [repoPath(f),
+               `https://cdn.jsdelivr.net/gh/${REPO}@${BRANCH}/${enc(f)}`,
+               `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${
+                   enc(f)}`]) {
+    try {
+      const r = await fetch(u);
+      if (r.ok) return cache[f] = await r.text()
+    } catch (e) {
+    }
+  }
+  throw new Error('Could not load ' + f);
+}
+async function showFile(f) {
+  curFile = f;
+  document.querySelectorAll('#tabs button')
+      .forEach(b => b.classList.toggle('act', b.dataset.f === f));
+  $('bCompile').hidden = !/\.js$/i.test(f) || Boolean(cur?.page);
+  $('path').textContent = f;
+  $('gh').href = `https://github.com/${REPO}/blob/${BRANCH}/${enc(f)}`;
+  const el = $('src');
+  el.textContent = 'Loading source…';
+  try {
+    const t = await source(f);
+    if (f !== curFile) return;
+    if (!t.trim()) {
+      el.textContent = '// File is empty';
+      return
+    }
+    const h = window.hljs ?
+        hljs.highlight(t, {language: lang(f), ignoreIllegals: true}).value :
+        t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    el.innerHTML =
+        h.split('\n')
+            .map((l, i) => `<span class="ln" data-n="${i + 1}">${l}</span>`)
+            .join('');
+  } catch (e) {
+    el.innerHTML = `<div class="err">${e.message}</div>`
+  }
+}
+function setView(v) {
+  if (!cur?.page && !compiledOutput) v = 'code';
+  $('bPrev').classList.toggle('on', v === 'prev');
+  $('bCode').classList.toggle('on', v === 'code');
+  $('frame').style.display = v === 'prev' ? 'block' : 'none';
+  $('code').style.display = v === 'code' ? 'flex' : 'none';
+  $('dev').style.visibility = v === 'prev' && cur?.page ? 'visible' : 'hidden';
+  $('view').classList.toggle('preview-mode', v === 'prev');
+  $('backLabs').classList.toggle('auto-hide', v === 'prev');
+  $('view').classList.remove('toolbar-hidden');
+  $('preview-toolbar').classList.remove('is-hidden');
+  if (v === 'prev')
+    hideToolbarLater();
+  else
+    clearTimeout(toolbarTimer);
+}
+
+let toolbarTimer;
+function revealToolbar() {
+  clearTimeout(toolbarTimer);
+  $('preview-toolbar').classList.remove('is-hidden');
+  $('view').classList.remove('toolbar-hidden');
+}
+function hideToolbarLater() {
+  clearTimeout(toolbarTimer);
+  if (!$('view').classList.contains('preview-mode')) return;
+  toolbarTimer = setTimeout(() => {
+    const toolbar = $('preview-toolbar');
+    if (toolbar.matches(':hover') || toolbar.contains(document.activeElement)) {
+      hideToolbarLater();
+      return;
+    }
+    toolbar.classList.add('is-hidden');
+    $('view').classList.add('toolbar-hidden');
+  }, 2500);
+}
+$('preview-toolbar').addEventListener('pointerenter', revealToolbar);
+$('preview-toolbar').addEventListener('pointerleave', hideToolbarLater);
+$('preview-toolbar').addEventListener('focusin', revealToolbar);
+$('preview-toolbar').addEventListener('focusout', hideToolbarLater);
+$('view').addEventListener('pointermove', e => {
+  if ($('view').classList.contains('toolbar-hidden') && e.clientY <= 12)
+    revealToolbar();
+});
+$('view').addEventListener('pointerdown', e => {
+  if ($('view').classList.contains('toolbar-hidden') && e.clientY <= 12)
+    revealToolbar();
+});
+function open(id) {
+  idx = ALL.findIndex(i => i.id === id);
+  cur = ALL[idx];
+  compiledOutput = false;
+  $('home').style.display = 'none';
+  $('view').style.display = 'flex';
+  $('title').textContent = cur.name;
+  $('bPrev').disabled = !cur.page;
+  $('bPrev').hidden = !cur.page;
+  $('bCompile').hidden = !cur.files.some(file => /\.js$/i.test(file));
+  $('frame').removeAttribute('sandbox');
+  $('frame').removeAttribute('srcdoc');
+  $('frame').src = cur.page ? repoPath(cur.page) : 'about:blank';
+  $('openTab').hidden = !cur.page;
+  if (cur.page) $('openTab').href = repoPath(cur.page);
+  $('tabs').innerHTML =
+      cur.files.map(f => `<button data-f="${f}">${base(f)}</button>`).join('');
+  setView(cur.page ? 'prev' : 'code');
+  showFile(cur.files[0]);
+  scrollTo(0, 0);
+}
+function route() {
+  const id = location.hash.slice(1);
+  const task = ALL.find(i => i.id === id);
+  if (task) {
+    setBackLabs(`#${task.labId}`);
+    open(id);
+    return;
+  }
+  clearTimeout(toolbarTimer);
+  $('view').classList.remove('preview-mode', 'toolbar-hidden');
+  $('view').style.display = 'none';
+  $('home').style.display = 'block';
+  $('frame').removeAttribute('sandbox');
+  $('frame').removeAttribute('srcdoc');
+  $('frame').src = 'about:blank';
+  const lab = LABS.find(group => group.id === id);
+  if (lab) {
+    setBackLabs('#');
+    renderTasks(lab);
+  } else if (ALL.length) {
+    setBackLabs(null);
+    renderPortal();
+  }
+}
+const go = d => {
+  location.hash = ALL[(idx + d + ALL.length) % ALL.length].id
+};
+function updateAnalogClock() {
+  if (window.__rvClock) return;
+  const now = new Date();
+  const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
+  const minutes = now.getMinutes() + seconds / 60;
+  const hours = (now.getHours() % 12) + minutes / 60;
+  const hourDeg = hours * 30;
+  const minuteDeg = minutes * 6;
+  const secondDeg = seconds * 6;
+  $('hour-hand').style.transform = `translateX(-50%) rotate(${hourDeg}deg)`;
+  $('minute-hand').style.transform = `translateX(-50%) rotate(${minuteDeg}deg)`;
+  $('second-hand').style.transform = `translateX(-50%) rotate(${secondDeg}deg)`;
+}
+setInterval(updateAnalogClock, 1000);
+updateAnalogClock();
+
+$('back').onclick = () => location.hash = cur ? cur.labId : '';
+$('prev').onclick = () => go(-1);
+$('next').onclick = () => go(1);
+$('bPrev').onclick = () => {
+  compiledOutput = false;
+  $('frame').removeAttribute('sandbox');
+  $('frame').removeAttribute('srcdoc');
+  $('frame').src = repoPath(cur.page);
+  setView('prev');
+};
+$('bCode').onclick = () => {
+  compiledOutput = false;
+  setView('code')
+};
+$('bCompile').onclick = async () => {
+  if (!curFile || !/\.js$/i.test(curFile)) return;
+  $('bCompile').disabled = true;
+  $('bCompile').textContent = 'Running…';
+  try {
+    const js = await source(curFile);
+    const safeSource = JSON.stringify(js).replace(/</g, '\\u003c');
+    const moduleTask = /(^|\n)\s*(?:import|export)\s/m.test(js);
+    const moduleUrl = repoPath(curFile);
+    const runner =
+        `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>*{box-sizing:border-box}body{margin:0;padding:24px;background:#090a0d;color:#eceae5;font:14px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;display:flex;flex-direction:column;min-height:100vh}.runner-head{display:flex;align-items:center;justify-content:space-between;color:#d4af37;font:600 11px/1.4 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}.runner-btn{background:rgba(212,175,55,0.12);border:1px solid rgba(212,175,55,0.3);color:#d4af37;padding:5px 14px;border-radius:0;cursor:pointer;font:500 12px system-ui,sans-serif;transition:all 0.2s ease}.runner-btn:hover{background:#d4af37;color:#090a0d}pre{white-space:pre-wrap;overflow-wrap:anywhere;margin:0;padding:20px;border:1px solid rgba(212,175,55,.2);border-radius:0;background:#11131a;flex:1;min-height:160px;font:13px/1.7 "JetBrains Mono",Consolas,monospace;color:#eceae5}</style></head><body><div class="runner-head"><span>JavaScript Console Output</span><button class="runner-btn" onclick="location.reload()">↺ Re-run Program</button></div><pre id="output">Running ${
+            curFile.replace(/[&<>"']/g, '')}…</pre><script>
+const output=document.getElementById("output"), lines=[];
+const format=value=>{if(typeof value==="string")return value;try{const json=JSON.stringify(value,null,2);return json===undefined?String(value):json}catch(_){return String(value)}};
+const render=()=>{output.textContent=lines.length?lines.join("\\n"):"Execution completed with no console output."};
+["log","info","warn","error","debug"].forEach(method=>console[method]=(...args)=>{lines.push(args.map(format).join(" "));render()});
+console.clear=()=>{lines.length=0;render()};
+
+window.prompt=(msg,def)=>{
+    let res=null;
+    try{ res=window.parent?window.parent.prompt(msg||"Enter value:",def||""):prompt(msg||"Enter value:",def||""); }catch(e){ res=prompt(msg||"Enter value:",def||""); }
+    lines.push("[Prompt Input] "+(msg||"Prompt")+": "+(res!==null?res:"(cancelled)"));
+    render();
+    return res;
+};
+
+window.alert=(msg)=>{
+    lines.push("[Alert] "+msg);
+    render();
+    try{ if(window.parent) window.parent.alert(msg); else alert(msg); }catch(_){}
+};
+
+window.confirm=(msg)=>{
+    let res=false;
+    try{ res=window.parent?window.parent.confirm(msg):confirm(msg); }catch(e){ res=confirm(msg); }
+    lines.push("[Confirm] "+msg+" -> "+res);
+    render();
+    return res;
+};
+
+window.onerror=(message,_source,line,column,error)=>{lines.push("Error: "+(error&&error.stack?error.stack:message+" (line "+line+":"+column+")"));render();return true};
+window.addEventListener("unhandledrejection",event=>{lines.push("Error: "+format(event.reason));render()});
+try{const task=document.createElement("script");task.type=${
+            JSON.stringify(
+                moduleTask ?
+                    'module' :
+                    'text/javascript')};if(task.type==="module")task.src=${
+            JSON.stringify(moduleUrl)};else task.textContent=${
+            safeSource};document.body.appendChild(task);render()}catch(error){lines.push("Error: "+(error.stack||error));render()}
+<\/script></body></html>`;
+    compiledOutput = true;
+    $('frame').setAttribute(
+        'sandbox', 'allow-scripts allow-modals allow-same-origin');
+    $('frame').srcdoc = runner;
+    setView('prev');
+  } catch (error) {
+    const safeError =
+        String(error.message || error)
+            .replace(
+                /[&<>]/g,
+                char => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'})[char]);
+    compiledOutput = true;
+    $('frame').setAttribute(
+        'sandbox', 'allow-scripts allow-modals allow-same-origin');
+    $('frame').srcdoc =
+        `<pre style="padding:24px;color:#fca5a5;background:#090a0d;font:14px/1.6 monospace">${
+            safeError}</pre>`;
+    setView('prev');
+  } finally {
+    $('bCompile').disabled = false;
+    $('bCompile').textContent = '▶ Compile';
+  }
+};
+$('tabs').onclick = e => {
+  if (!e.target.dataset.f) return;
+  compiledOutput = false;
+  setView('code');
+  showFile(e.target.dataset.f);
+};
+$('dev').onclick = e => {
+  const d = e.target.dataset.d;
+  if (d === undefined) return;
+  $('frame').className = 'frame ' + d;
+  document.querySelectorAll('#dev button')
+      .forEach(b => b.classList.toggle('on', b === e.target))
+};
+$('copy').onclick = async e => {
+  try {
+    await navigator.clipboard.writeText(cache[curFile] || '');
+    e.target.textContent = 'Copied ✓'
+  } catch (_) {
+    e.target.textContent = 'Failed'
+  }
+  setTimeout(() => e.target.textContent = 'Copy', 1400)
+};
+addEventListener('hashchange', route);
+route();
+fit();
+addEventListener('load', fit);
