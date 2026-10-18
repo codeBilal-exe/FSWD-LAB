@@ -9,7 +9,7 @@ Every lab, task and line of source — previewed, inspected and run in the brows
 
 <br>
 
-[**Open the live portal →**](https://codebilal-exe.github.io/FSWD-LAB/) &nbsp;·&nbsp; [How it works](#-how-discovery-works) &nbsp;·&nbsp; [Run locally](#-run-locally) &nbsp;·&nbsp; [Add a lab](#-add-a-lab)
+<a href="https://codebilal-exe.github.io/FSWD-LAB/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Open_live_preview-%E2%86%97-d4af37?style=for-the-badge&labelColor=11131a" alt="Open live preview in a new tab"></a> &nbsp;·&nbsp; [How it works](#-how-discovery-works) &nbsp;·&nbsp; [Run locally](#-run-locally) &nbsp;·&nbsp; [Add a lab](#-add-a-lab)
 
 <br>
 

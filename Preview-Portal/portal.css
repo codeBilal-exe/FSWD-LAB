@@ -2381,8 +2381,8 @@ footer {
   );
   border: 1px solid color-mix(in srgb, var(--c) 55%, var(--line));
   box-shadow:
-    0 16px 30px -10px color-mix(in srgb, var(--c) 55%, transparent),
-    inset 0 1px color-mix(in srgb, #fff 28%, transparent);
+    0 12px 24px -12px rgba(0, 0, 0, 0.5),
+    inset 0 1px color-mix(in srgb, #fff 18%, transparent);
   animation:
     orbBob 4.2s ease-in-out infinite,
     orbPop 0.9s var(--ease) backwards;
@@ -2394,7 +2394,6 @@ footer {
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
-  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--c) 60%, transparent));
 }
 .ico span {
   color: var(--text);
