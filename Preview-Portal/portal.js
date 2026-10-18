@@ -58,9 +58,11 @@ $('theme').onclick = e => {
   root.style.setProperty('--vx', x + 'px');
   root.style.setProperty('--vy', y + 'px');
   root.style.setProperty('--vend', end + 'px');
-  document.startViewTransition(apply).finished.finally(
-      () => ['--vx', '--vy', '--vend'].forEach(
-          p => root.style.removeProperty(p)));
+  root.classList.add('vt-run');
+  document.startViewTransition(apply).finished.finally(() => {
+    root.classList.remove('vt-run');
+    ['--vx', '--vy', '--vend'].forEach(p => root.style.removeProperty(p));
+  });
 };
 
 function readableName(path, directoryPageCount = 1) {
@@ -445,8 +447,9 @@ async function showFile(f) {
 }
 function setView(v) {
   if (!cur?.page && !compiledOutput) v = 'code';
-  $('bPrev').classList.toggle('on', v === 'prev');
+  $('bPrev').classList.toggle('on', v === 'prev' && !compiledOutput);
   $('bCode').classList.toggle('on', v === 'code');
+  $('bCompile').classList.toggle('on', v === 'prev' && compiledOutput);
   $('frame').style.display = v === 'prev' ? 'block' : 'none';
   $('code').style.display = v === 'code' ? 'flex' : 'none';
   $('dev').style.visibility = v === 'prev' && cur?.page ? 'visible' : 'hidden';
@@ -500,6 +503,7 @@ function open(id) {
   $('title').textContent = cur.name;
   $('bPrev').disabled = !cur.page;
   $('bPrev').hidden = !cur.page;
+  $('dev').hidden = !cur.page;
   $('bCompile').hidden = !cur.files.some(file => /\.js$/i.test(file));
   $('frame').removeAttribute('sandbox');
   $('frame').removeAttribute('srcdoc');
