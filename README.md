@@ -9,11 +9,13 @@ Every lab, task and line of source — previewed, inspected and run in the brows
 
 <br>
 
-<a href="https://codebilal-exe.github.io/FSWD-LAB/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Open_live_preview-%E2%86%97-d4af37?style=for-the-badge&labelColor=11131a" alt="Open live preview in a new tab"></a> &nbsp;·&nbsp; [How it works](#-how-discovery-works) &nbsp;·&nbsp; [Run locally](#-run-locally) &nbsp;·&nbsp; [Add a lab](#-add-a-lab)
+<a href="https://codebilal-exe.github.io/FSWD-LAB/" target="_blank" rel="noopener noreferrer"><img src="Preview-Portal/live-preview-button.svg" width="252" height="48" alt="Open live preview in a new tab"></a>
+
+[The idea](#-the-idea) &nbsp;·&nbsp; [How it works](#-how-discovery-works) &nbsp;·&nbsp; [Run locally](#-run-locally) &nbsp;·&nbsp; [Add a lab](#-add-a-lab) &nbsp;·&nbsp; [Troubleshooting](#-troubleshooting)
 
 <br>
 
-`06 labs` &nbsp;◆&nbsp; `28 tasks` &nbsp;◆&nbsp; `0 build steps` &nbsp;◆&nbsp; `0 frameworks` &nbsp;◆&nbsp; `1 repo, auto-indexed`
+`06 labs` &nbsp;◆&nbsp; `28 tasks` &nbsp;◆&nbsp; `0 build steps` &nbsp;◆&nbsp; `0 frameworks in the portal` &nbsp;◆&nbsp; `1 repo, auto-indexed`
 
 </div>
 
@@ -25,7 +27,7 @@ Most lab repositories are a maze of folders you have to clone before you can see
 
 The portal reads the repository's own file tree, works out what is a lab and what is a task, and builds a gallery with **live thumbnails of the real pages**. Open any task and you get a full-screen preview, a device-frame switcher, a syntax-highlighted source viewer and, for plain JavaScript exercises, a sandboxed runner with a console.
 
-It is plain HTML, CSS and JavaScript. No bundler, no framework, nothing to install.
+The portal itself is plain HTML, CSS and JavaScript. No bundler, no framework, nothing to install. (The labs inside it are free to use whatever they like. Lab 3, for example, uses Bootstrap.)
 
 ## ◆ Inside a task
 
@@ -42,15 +44,16 @@ Home ─ all labs, live thumbnails
 |:--|:--|
 | **Live thumbnails** | Each card is a scaled, non-interactive copy of the actual page. A shimmer shows until it has loaded. |
 | **Full-screen preview** | The toolbar tucks itself away after a couple of seconds so the page gets the whole window. Move to the top edge to bring it back. |
-| **Device frames** | Switch between Desktop, Tablet (768 px) and Mobile (390 px) frames. |
+| **Device frames** | Switch between Desktop, Tablet (768 px) and Mobile (390 px) frames. The switcher is hidden on narrow screens, where the real viewport is the test. |
 | **Source inspector** | One tab per file, line numbers, one-click copy, and a link straight to the file on GitHub. |
 | **JavaScript runner** | Runs a `.js` task inside a sandboxed frame. Captures `console.log`, `info`, `warn` and `error`, bridges `prompt`, `alert` and `confirm`, and understands ES modules. |
 | **Smart buttons** | *Preview* only appears for tasks that have a page. *Compile* only appears when a source-only `.js` file is open. |
+| **Task navigation** | Previous and next buttons step through every task in the archive without going back to the gallery. |
 | **Two themes** | Obsidian-and-champagne dark, warm-paper light, remembered between visits. |
 
 ## ◆ How discovery works
 
-The portal never keeps a hand-written list of labs. On every load it builds one from the repository itself, and it has several fallbacks so the site still works when the network doesn't cooperate.
+The portal never depends on a hand-written list of labs. On every load it builds one from the repository itself, and it has several fallbacks so the site still works when the network doesn't cooperate.
 
 ```mermaid
 flowchart LR
@@ -67,7 +70,7 @@ flowchart LR
   G --> R([Render cards and thumbnails])
 ```
 
-A built-in file list is merged into every result, so a lab never disappears because an API call failed.
+A built-in file list (`STATIC_REPO_TREE` in `portal.js`) is **merged into every result**, so a lab never disappears because an API call failed. The flip side is covered in [Good to know](#-good-to-know).
 
 ### What the indexer understands
 
@@ -90,7 +93,7 @@ The interface is built as a "dimensional lab notebook": flat where it should rea
 - **Cards that arrive.** Cards rise in at an angle, their "screens" power on, and on hover they tilt toward your pointer while a gold edge draws across the bottom. Lab cards fan out a deck of their task sheets.
 - **A theme switch you can feel.** The toggle is a soft pressed-in pill. Flipping it grows the new theme outward from the switch as a circular wipe with a feathered edge.
 - **Scroll-aware details.** A progress bar tracks the page, and the logo ticker skews with scroll speed.
-- **Respectful by default.** Everything honours `prefers-reduced-motion`, and the page stays fully visible if the motion script fails to load.
+- **Respectful by default.** Everything honours `prefers-reduced-motion`, and the page stays fully readable if the motion script fails to load. You just lose the animation.
 
 ## ◆ Labs
 
@@ -215,13 +218,13 @@ FSWD-LAB/
 ├── index.html                  the portal
 ├── favicon.png
 ├── README.md
-├── assets/
-│   └── banner.svg              animated header for this README
 │
 ├── Preview-Portal/
 │   ├── portal.css              theme, layout, cards, preview window
 │   ├── portal.js               discovery, routing, preview, source, runner
-│   └── revamp.js               motion layer: scroll, tilt, constellation
+│   ├── revamp.js               motion layer: scroll, tilt, constellation
+│   ├── banner.svg              animated header for this README
+│   └── live-preview-button.svg button graphic for this README
 │
 ├── LAB-1/                      calculator
 ├── LAB-2/                      five HTML/CSS layouts
@@ -231,17 +234,21 @@ FSWD-LAB/
 └── LAB-6/                      asynchronous JavaScript
 ```
 
+The three scripts load in a fixed order: `portal.js` builds the data and the UI, then `revamp.js` layers motion on top. `revamp.js` only adds classes and CSS variables, which is why the site still works without it.
+
 ## ◆ Run locally
 
 ```bash
 git clone https://github.com/codeBilal-exe/FSWD-LAB.git
 cd FSWD-LAB
-python -m http.server 8000
+python -m http.server 8000     # or python3 on macOS / Linux
 ```
 
 Then open <http://localhost:8000>.
 
 A local server is needed because the portal fetches files and talks to the GitHub API. Opening `index.html` straight from disk will not work.
+
+> **Heads-up:** previews and source load from your local files, but the *list* of labs comes from GitHub's `main` branch. A lab you have only created locally won't get a card until you push it (see [Good to know](#-good-to-know)).
 
 ## ◆ Add a lab
 
@@ -252,11 +259,26 @@ A local server is needed because the portal fetches files and talks to the GitHu
 
 That's it. The next page load picks the new lab up and gives it a card, a thumbnail and a source viewer.
 
+Two habits that save trouble:
+
+- **Match filename casing exactly**, in your links as well as your folder names. `style.css` and `Style.css` are the same file on Windows and macOS but different files on GitHub Pages.
+- **Optional:** add the new files to `STATIC_REPO_TREE` in `portal.js` if you want the lab to survive when every network lookup fails.
+
+## ◆ Good to know
+
+- **The built-in list never shrinks.** Because `STATIC_REPO_TREE` is merged into every result, a task you rename or delete on GitHub still appears in the portal (as a broken card) until you remove its entry from that list.
+- **Discovery depends on GitHub.** The unauthenticated GitHub API allows roughly 60 requests per hour per IP. When that runs out the portal falls back to jsDelivr, which can lag behind your latest push, and then to the cached or built-in list.
+- **Lab folders must match `LAB-<number>`.** Anything else at the top level is ignored.
+- **Branch is fixed.** The portal reads `main` of `codeBilal-exe/FSWD-LAB`. Forks need to change `REPO` and `BRANCH` at the top of `portal.js`.
+
 ## ◆ Troubleshooting
 
 | Symptom | Likely cause and fix |
 |:--|:--|
-| Cards or hero text never appear on the live site | **Filename casing.** GitHub Pages is case-sensitive and `index.html` loads `revamp.js` in lowercase. If the file is `Revamp.js`, rename it. On Windows and macOS use a two-step rename: `git mv Revamp.js tmp.js && git mv tmp.js revamp.js`. |
+| Animations are missing on the live site (tech tiles stacked in the centre, no scroll reveals or card tilt) but fine on localhost | **Filename casing.** GitHub Pages is case-sensitive and `index.html` loads `revamp.js` in lowercase. If the file is `Revamp.js`, rename it. On Windows and macOS use a two-step rename: `git mv Revamp.js tmp.js && git mv tmp.js revamp.js`. Then check that `…/Preview-Portal/revamp.js` opens in the browser instead of showing a 404. |
+| A lab page loads but is unstyled or missing images on the live site | The same casing problem, inside that lab. Compare the filenames referenced in the HTML with the real filenames, letter for letter. |
+| A lab or task I just pushed doesn't show up | Check the folder is named `LAB-<number>` and pushed to `main`. The jsDelivr fallback can lag, so wait a few minutes and hard-refresh. |
+| A task I deleted or renamed is still listed | It is in the built-in list. Remove its entry from `STATIC_REPO_TREE` in `portal.js`. |
 | Previews are blank | The task has no `index.html` and no page the portal could pick, or the page is being opened from `file://`. Use a local server. |
 | No Compile button | It only shows for `.js` files in tasks that have no page. Tasks with a page use Preview instead. |
 | Only a few labs show offline | The portal fell back to its built-in list. Reconnect and reload to re-index from GitHub. |
