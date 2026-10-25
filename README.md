@@ -188,16 +188,41 @@ The first five tasks rebuild the Lab 2 exercises with Bootstrap's grid and compo
 </details>
 
 <details>
-<summary><b>Lab 07 — Node.js persistent APIs</b> · 2 tasks</summary>
+<summary><b>Lab 07 — Node.js APIs and persistent data</b> · 2 tasks</summary>
 
 <br>
 
 | Task | What it is |
 |:--|:--|
-| [Student Management API](LAB-7/Task-1_STUDENT_MANAGEMENT_API/) | CRUD endpoints for students, teachers, attendance and marks, persisted to JSON. |
-| [E-commerce Store](LAB-7/Task-2_ECOMMERCE_UI/) | A copy of the Lab 3 storefront with persistent product, customer, review, order and cart APIs. |
+| [Student Management API](LAB-7/Task-1_STUDENT_MANAGEMENT_API/) | A Node.js HTTP server with CRUD APIs for students, teachers, attendance, marks and e-commerce data. Records are persisted in a JSON file. |
+| [E-commerce Store](LAB-7/Task-2_ECOMMERCE_UI/) | The storefront connects to the Node.js API for persistent products, customers, reviews, orders and cart data. |
 
 </details>
+
+### Running Lab 7
+
+Lab 7 uses Node.js rather than browser-only JavaScript. Install Node.js 18 or newer, then start the server from the student API folder:
+
+```bash
+cd LAB-7/Task-1_STUDENT_MANAGEMENT_API
+npm start
+```
+
+The server starts at <http://localhost:3000>. Open that address to use the e-commerce storefront, or send requests to the API routes. The server stores records in `data/db.json`.
+
+| API route | Data |
+|:--|:--|
+| `/api/students` | Students |
+| `/api/teachers` | Teachers |
+| `/api/attendance` | Attendance records |
+| `/api/marks` | Student marks |
+| `/api/products` | Store products |
+| `/api/customers` | Customers |
+| `/api/reviews` | Product reviews |
+| `/api/orders` | Orders |
+| `/api/cart/:customerId` | A customer's cart |
+
+The collection routes support `GET`, `POST`, `PUT`/`PATCH` and `DELETE` operations. The cart route supports reading, adding, updating and removing cart items.
 
 > **Try it:** open any task from Lab 04, 05 or 06 in the portal and press **Compile**. The exercise runs in a sandbox and its console output appears in place of a preview.
 

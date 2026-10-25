@@ -235,8 +235,12 @@ async function discoverLabs() {
   ].sort((a, b) => a.localeCompare(b, undefined, {numeric: true}));
   LABS = folders.map(folder => {
     const labFiles = files.filter(path => path.startsWith(folder + '/'));
+    // Lab 7 is a Node.js API lab. Its HTML storefront is only a client for
+    // those APIs, so use the JavaScript files as the task preview instead of
+    // presenting the storefront as the assignment output.
     const taskPages = labFiles.filter(
         path => /\.html?$/i.test(path) &&
+            !/^LAB-7$/i.test(folder) &&
             !(path.split('/').length === 2 &&
               /^index\.html?$/i.test(path.split('/').pop())));
     const labId = makeId(folder);
@@ -277,7 +281,9 @@ async function discoverLabs() {
           [unit.sourceFile] :
           labFiles.filter(
               file => file.slice(0, file.lastIndexOf('/')) === unit.dir &&
-                  /\.(html?|css|js|json)$/i.test(file));
+                  ( /^LAB-7$/i.test(folder) ?
+                        /\.(js|json)$/i.test(file) :
+                        /\.(html?|css|js|json)$/i.test(file)));
       if (unit.page && !related.includes(unit.page)) related.unshift(unit.page);
       const name = unit.page ?
           readableName(unit.page, unit.pages.length) :
@@ -291,7 +297,9 @@ async function discoverLabs() {
         id: makeId(unit.page || unit.sourceFile || unit.dir),
         labId,
         name,
-        desc: previewable ?
+        desc: /^LAB-7$/i.test(folder) ?
+            `Node.js JavaScript source for ${name}. Open the source to inspect the API implementation.` :
+            previewable ?
             `Live preview of ${
                 name}. Use the source tabs to inspect all pages and assets in this task.` :
             `Source files for ${name}. Open the task to inspect its code.`,
