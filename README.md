@@ -15,7 +15,7 @@ Every lab, task and line of source — previewed, inspected and run in the brows
 
 <br>
 
-`06 labs` &nbsp;◆&nbsp; `28 tasks` &nbsp;◆&nbsp; `0 build steps` &nbsp;◆&nbsp; `0 frameworks in the portal` &nbsp;◆&nbsp; `1 repo, auto-indexed`
+`07 labs` &nbsp;◆&nbsp; `30 tasks` &nbsp;◆&nbsp; `0 build steps` &nbsp;◆&nbsp; `0 frameworks in the portal` &nbsp;◆&nbsp; `1 repo, auto-indexed`
 
 </div>
 
@@ -187,6 +187,18 @@ The first five tasks rebuild the Lab 2 exercises with Bootstrap's grid and compo
 
 </details>
 
+<details>
+<summary><b>Lab 07 — Node.js persistent APIs</b> · 2 tasks</summary>
+
+<br>
+
+| Task | What it is |
+|:--|:--|
+| [Student Management API](LAB-7/Task-1_STUDENT_MANAGEMENT_API/) | CRUD endpoints for students, teachers, attendance and marks, persisted to JSON. |
+| [E-commerce Store](LAB-7/Task-2_ECOMMERCE_UI/) | A copy of the Lab 3 storefront with persistent product, customer, review, order and cart APIs. |
+
+</details>
+
 > **Try it:** open any task from Lab 04, 05 or 06 in the portal and press **Compile**. The exercise runs in a sandbox and its console output appears in place of a preview.
 
 ## ◆ Featured project: Frostline
@@ -231,7 +243,8 @@ FSWD-LAB/
 ├── LAB-3/                      Bootstrap rebuilds + Frostline
 ├── LAB-4/                      JavaScript fundamentals
 ├── LAB-5/                      advanced JavaScript, incl. transcript modules
-└── LAB-6/                      asynchronous JavaScript
+├── LAB-6/                      asynchronous JavaScript
+└── LAB-7/                      student management + e-commerce APIs
 ```
 
 The three scripts load in a fixed order: `portal.js` builds the data and the UI, then `revamp.js` layers motion on top. `revamp.js` only adds classes and CSS variables, which is why the site still works without it.

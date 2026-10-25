@@ -2,6 +2,7 @@
 (() => {
   const $ = s => document.querySelector(s), root = document.documentElement;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
   root.classList.add('rv');
   window.__rvClock = 1;
 
@@ -17,12 +18,21 @@
     ly = y;
   }, {passive: true});
 
-  /* mouse parallax on the 3D stack */
-  $('.hero')?.addEventListener('pointermove', e => {
-    root.style.setProperty('--mx', (e.clientX / innerWidth * 2 - 1).toFixed(2));
-    root.style.setProperty(
-        '--my', (e.clientY / innerHeight * 2 - 1).toFixed(2));
-  });
+  /* Keep the clock's 3D tilt subtle and tied to the scene, not the whole page. */
+  const heroScene = $('#scene');
+  if (finePointer && heroScene) {
+    heroScene.addEventListener('pointermove', e => {
+      const r = heroScene.getBoundingClientRect();
+      const x = (e.clientX - r.left - r.width / 2) / (r.width / 2 || 1);
+      const y = (e.clientY - r.top - r.height / 2) / (r.height / 2 || 1);
+      root.style.setProperty('--mx', (Math.max(-1, Math.min(1, x)) * .62).toFixed(2));
+      root.style.setProperty('--my', (Math.max(-1, Math.min(1, y)) * .62).toFixed(2));
+    }, {passive: true});
+    heroScene.addEventListener('pointerleave', () => {
+      root.style.setProperty('--mx', '0');
+      root.style.setProperty('--my', '0');
+    }, {passive: true});
+  }
 
   /* tech badges: floating 3D constellation — depth parallax, cursor tilt +
    * repel, flowing data links, scroll burst */
@@ -34,6 +44,13 @@
   ];
   const ORDER = [0, 6, 1, 2, 3, 4, 5, 7],
         clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  let sceneVisible = true;
+  if (sc && 'IntersectionObserver' in window) {
+    sceneVisible = false;
+    new IntersectionObserver(([entry]) => {
+      sceneVisible = entry.isIntersecting;
+    }, {rootMargin: '120px'}).observe(sc);
+  }
   const NS = 'http://www.w3.org/2000/svg',
         lsvg = document.createElementNS(NS, 'svg'),
         lg = document.createElementNS(NS, 'g');
@@ -62,37 +79,37 @@
   }, {passive: true});
   root.addEventListener('mouseleave', () => hasPtr = false);
   function orbit(now) {
-    if (!sc || !orbs.length) return;
+    if (!sc || !orbs.length || !sceneVisible) return;
     if (!t0) t0 = now;
     const e = reduce ? 1 : 1 - Math.pow(1 - Math.min(1, (now - t0) / 1600), 3),
           t = reduce ? 0 : now / 1000, w = sc.clientWidth, h = sc.clientHeight,
-          edge = innerWidth < 561 ? 30 : 42,
+          edge = innerWidth < 561 ? 44 : 42,
           Wx = Math.min(
               w / 2 - edge + 20, (orbitEl ? orbitEl.clientWidth : 300) * .82),
           Wy = h / 2 - 36, r = sc.getBoundingClientRect(), cx = r.left + w / 2,
           cy = r.top + h / 2,
-          burst = 1 + Math.min(1, scrollY / innerHeight) * .5;
+          burst = finePointer ? 1 + Math.min(1, scrollY / innerHeight) * .16 : 1;
     sx += (pmx - sx) * .06;
     sy += (pmy - sy) * .06;
     lg.setAttribute('transform', `translate(${w / 2},${h / 2})`);
     orbs.forEach((el, i) => {
       const [ax, ay, z] = ANCH[i % ANCH.length],
                      bx = ax * Wx * burst * e +
-          (reduce ? 0 : Math.sin(t * (.5 + i * .07) + i * 1.7) * 14) +
-          sx * 30 * z,
+          (reduce ? 0 : Math.sin(t * (.5 + i * .07) + i * 1.7) * (finePointer ? 14 : 4)) +
+          sx * (finePointer ? 18 : 0) * z,
                      by = ay * Wy * burst * e +
-          (reduce ? 0 : Math.cos(t * (.42 + i * .05) + i * 2.3) * 18) +
-          sy * 24 * z,
+          (reduce ? 0 : Math.cos(t * (.42 + i * .05) + i * 2.3) * (finePointer ? 18 : 5)) +
+          sy * (finePointer ? 14 : 0) * z,
                      ddx = pcx - (cx + bx), ddy = pcy - (cy + by),
                      dist = Math.hypot(ddx, ddy) || 1,
                      push = hasPtr && dist < 150 ? (150 - dist) / 150 * 40 : 0;
       tgx[i] += (-ddx / dist * push - tgx[i]) * .14;
       tgy[i] += (-ddy / dist * push - tgy[i]) * .14;
       const x = bx + tgx[i], y = by + tgy[i],
-            ry = (hasPtr ? clamp(ddx / 9, -28, 28) : 0) +
-          Math.sin(t * .9 + i) * 8,
-            rx = (hasPtr ? clamp(-ddy / 9, -28, 28) : 0) +
-          Math.cos(t * .8 + i * 1.3) * 6;
+          ry = (hasPtr ? clamp(ddx / 14, -15, 15) : 0) +
+          (finePointer ? Math.sin(t * .45 + i) * 3 : 0),
+          rx = (hasPtr ? clamp(-ddy / 14, -15, 15) : 0) +
+          (finePointer ? Math.cos(t * .4 + i * 1.3) * 2 : 0);
       tilX[i] += (rx - tilX[i]) * .12;
       tilY[i] += (ry - tilY[i]) * .12;
       el.style.transform =
@@ -186,7 +203,7 @@
   scan();
 
   /* 3D tilt toward the cursor */
-  if (!reduce) {
+  if (!reduce && finePointer) {
     g.addEventListener('pointermove', e => {
       if (e.pointerType === 'touch') return;
       const t = e.target.closest('.thumb');

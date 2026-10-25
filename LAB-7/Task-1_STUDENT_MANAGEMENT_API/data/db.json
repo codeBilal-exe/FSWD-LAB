@@ -1,0 +1,18 @@
+{
+  "students": [],
+  "teachers": [],
+  "attendance": [],
+  "marks": [],
+  "customers": [],
+  "reviews": [],
+  "orders": [],
+  "carts": {},
+  "products": [
+    { "id": 1, "name": "Studio Wireless Headphones", "category": "Audio", "description": "Immersive sound with soft, all-day ear cushions.", "price": 129, "stock": 24 },
+    { "id": 2, "name": "Everyday Carry Tote", "category": "Accessories", "description": "A durable, roomy companion for your daily routine.", "price": 58, "stock": 38 },
+    { "id": 3, "name": "Form Everyday Watch", "category": "Accessories", "description": "A quiet classic for every day.", "price": 89, "stock": 17 },
+    { "id": 4, "name": "Halo Portable Lamp", "category": "Home", "description": "A softer glow, wherever you are.", "price": 64, "stock": 21 },
+    { "id": 5, "name": "Cloud Knit Throw", "category": "Home", "description": "A soft layer for slow mornings and quiet evenings.", "price": 76, "stock": 13 },
+    { "id": 6, "name": "Arc Ceramic Mug Set", "category": "Home", "description": "Hand-finished mugs made for everyday rituals.", "price": 42, "stock": 31 }
+  ]
+}

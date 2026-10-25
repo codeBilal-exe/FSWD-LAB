@@ -160,7 +160,22 @@ const STATIC_REPO_TREE = [
   {type: 'blob', path: 'LAB-5/task5_transcript_modules/package.json'},
   {type: 'blob', path: 'LAB-5/task5_transcript_modules/transcriptService.js'},
   {type: 'blob', path: 'LAB-6/task1_async_user_fetch.js'},
-  {type: 'blob', path: 'LAB-6/task2_promise_all.js'}
+  {type: 'blob', path: 'LAB-6/task2_promise_all.js'},
+  {type: 'blob', path: 'LAB-7/Task-1_STUDENT_MANAGEMENT_API/README.md'},
+  {type: 'blob', path: 'LAB-7/Task-1_STUDENT_MANAGEMENT_API/data/db.json'},
+  {type: 'blob', path: 'LAB-7/Task-1_STUDENT_MANAGEMENT_API/index.html'},
+  {type: 'blob', path: 'LAB-7/Task-1_STUDENT_MANAGEMENT_API/package.json'},
+  {type: 'blob', path: 'LAB-7/Task-1_STUDENT_MANAGEMENT_API/server.js'},
+  {type: 'blob', path: 'LAB-7/Task-2_ECOMMERCE_UI/cart.html'},
+  {type: 'blob', path: 'LAB-7/Task-2_ECOMMERCE_UI/checkout.html'},
+  {type: 'blob', path: 'LAB-7/Task-2_ECOMMERCE_UI/ecommerce-api.js'},
+  {type: 'blob', path: 'LAB-7/Task-2_ECOMMERCE_UI/index.html'},
+  {type: 'blob', path: 'LAB-7/Task-2_ECOMMERCE_UI/login.html'},
+  {type: 'blob', path: 'LAB-7/Task-2_ECOMMERCE_UI/product.html'},
+  {type: 'blob', path: 'LAB-7/Task-2_ECOMMERCE_UI/reviews.html'},
+  {type: 'blob', path: 'LAB-7/Task-2_ECOMMERCE_UI/shop.html'},
+  {type: 'blob', path: 'LAB-7/Task-2_ECOMMERCE_UI/signup.html'},
+  {type: 'blob', path: 'LAB-7/Task-2_ECOMMERCE_UI/store.css'}
 ];
 function includeKnownFiles(tree) {
   const files = new Map();
